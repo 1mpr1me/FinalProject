@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="payne_gray">#3a606e</color>
+    <color name="slate_gray">#607b7d</color>
+    <color name="battleship_gray">#828e82</color>
+    <color name="sage">#aaae8e</color>
+    <color name="platinum">#e0e0e0</color>
 </resources>
