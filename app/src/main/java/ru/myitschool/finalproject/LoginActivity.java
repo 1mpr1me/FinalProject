@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText Email, Password;
     Button buttonLog;
-    TextView RegisterNow;
+    TextView RegisterNow, forgotLog;
     FirebaseAuth mAuth;
 
     @Override
@@ -57,6 +57,16 @@ public class LoginActivity extends AppCompatActivity {
         buttonLog = findViewById(R.id.login_btn);
         RegisterNow = findViewById(R.id.registerNow);
         mAuth = FirebaseAuth.getInstance();
+        forgotLog = findViewById(R.id.forgot);
+
+        forgotLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), ForgotActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
         RegisterNow.setOnClickListener(new View.OnClickListener() {
             @Override
