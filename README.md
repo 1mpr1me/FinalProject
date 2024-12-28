@@ -1,4 +1,4 @@
-Samsung Final project "Workout Master"
+Samsung Final project "FitTrack"
 
 This app is designed to help users achieve their fitness goals by creating personalized workout programs. Users input their height, weight, and current
 fitness level (e.g., number of pushups they can do), and the app generates a workout plan for a specified number of days. It sends daily reminders to keep
