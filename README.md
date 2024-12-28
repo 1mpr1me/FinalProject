@@ -1,7 +1,8 @@
 Samsung Final project "Workout Master"
 
-1. This game encourages users to stay active by rewarding them with points for completing real-life workouts.
-2. Players can use these points to improve skills like stamina, strength, and flexibility.
-3. The game includes monthly competitions where players compare their progress, earn rankings, and level up.
-4. Winners receive real-life rewards, gifts, such as company vouchers(maybe).
-5. The game also features leaderboards, badges, and customizable avatars to make fitness fun and motivating.
+This app is designed to help users achieve their fitness goals by creating personalized workout programs. Users input their height, weight, and current
+fitness level (e.g., number of pushups they can do), and the app generates a workout plan for a specified number of days. It sends daily reminders to keep
+users on track and allows them to set specific goals, such as increasing the number of pushups from 10 to 20. The app then adjusts the program to gradually
+improve their performance, ensuring steady progress without overwhelming them. Users can track their improvements and see how they’re advancing toward their
+goals. At the end of the process, the app uses AI to analyze their progress and offer smart suggestions for further improvement, optimizing their workout
+routine and helping them achieve even greater results.
