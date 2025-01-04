@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/payne_gray"
+    android:background="@color/light_cream"
     tools:context=".ForgotActivity">
 
     <Button
@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat"
         android:text="Reset Password"
-        android:textColor="@color/platinum"
+        android:backgroundTint="@color/pale_mint"
+        android:textColor="@color/charcoal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +29,7 @@
         android:ems="10"
         android:inputType="text"
         android:hint="email"
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         android:text=""
         app:layout_constraintBottom_toTopOf="@+id/reset"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +45,7 @@
         android:layout_height="71dp"
         android:fontFamily="@font/montserrat"
         android:text="Type above the email, you want to receive reset link"
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         android:textSize="20sp"
         tools:layout_editor_absoluteX="46dp"
         tools:layout_editor_absoluteY="247dp" />
@@ -56,6 +57,8 @@
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/lavender"
+        android:textColor="@color/charcoal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reset" />
 </androidx.constraintlayout.widget.ConstraintLayout>

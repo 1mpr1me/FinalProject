@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/payne_gray"
+    android:background="@color/light_cream"
     tools:context=".LoginActivity">
 
     <EditText
@@ -17,7 +17,7 @@
         android:inputType="textEmailAddress"
         android:fontFamily="@font/montserrat"
         android:text=""
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         android:hint="email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -34,7 +34,7 @@
         android:fontFamily="@font/montserrat"
         android:inputType="textPassword"
         android:text=""
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
         android:layout_marginTop="208dp"
         android:fontFamily="@font/montserrat"
         android:text="LOG IN"
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         android:textAlignment="center"
         android:textSize="30sp"
 
@@ -62,7 +62,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat"
         android:text="Log In"
-        android:textColor="@color/platinum"
+        android:backgroundTint="@color/pale_mint"
+        android:textColor="@color/charcoal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +71,7 @@
         app:layout_constraintVertical_bias="0.067" />
 
     <TextView
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         android:fontFamily="@font/montserrat"
 
         android:id="@+id/registerNow"
@@ -89,7 +90,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat"
         android:text="Forgot password?"
-        android:textColor="@color/platinum"
+        android:textColor="@color/charcoal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

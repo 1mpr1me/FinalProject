@@ -28,11 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonLog;
     TextView RegisterNow, forgotLog;
     FirebaseAuth mAuth;
+    FirebaseUser currentUser;
 
     @Override
     public void onStart(){
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -50,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
 
         Email = findViewById(R.id.email_log);
         Password = findViewById(R.id.password_log);

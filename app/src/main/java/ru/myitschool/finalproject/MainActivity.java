@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button logOut;
+
     FirebaseAuth Auth;
     FirebaseUser user;
 
@@ -28,22 +28,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Auth = FirebaseAuth.getInstance();
-        logOut = findViewById(R.id.button);
+
         user = Auth.getCurrentUser();
         if (user == null){
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
             finish();
         }
-
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
     }
 }
