@@ -2,10 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_cream">#FCFFFDD0</color>
-    <color name="charcoal">#3B3B3B</color>
-    <color name="pale_mint">#DBF9DB</color>
-    <color name="lavender">#E6E6FA</color>
-    <color name="baby_blue">#BFEFFF</color>
-    <color name="transparent">#0000000</color>
+    <color name="light_cream">#FF172325</color>
+    <color name="charcoal">#D7E5D8</color>
+    <color name="pale_mint">#A9F00F</color>
+    <color name="baby_blue">#547808</color>
+    <color name="transparent">#00FF0000</color>
 </resources>
