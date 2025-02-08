@@ -7,4 +7,3 @@ improve their performance, ensuring steady progress without overwhelming them. U
 goals. At the end of the process, the app uses AI to analyze their progress and offer smart suggestions for further improvement, optimizing their workout
 routine and helping them achieve even greater results.
 
-![image](https://github.com/user-attachments/assets/21f7f026-81f0-4bee-a0e1-a626753cbf53)
