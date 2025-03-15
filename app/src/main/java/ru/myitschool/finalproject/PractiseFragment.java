@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PracticeFragment extends Fragment {
+public class PractiseFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private List<Exercise> exerciseList;
