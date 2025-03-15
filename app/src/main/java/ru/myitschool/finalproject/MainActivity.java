@@ -45,19 +45,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if(id==R.id.nav_home){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new HomeFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
                     return true;
-                } else if (id==R.id.nav_calendar) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new CalendarFragment()).commit();
+                } else if (id==R.id.nav_lessons) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LessonsFragment()).commit();
                     return true;
                 } else if (id==R.id.nav_progress) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new ProgressFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProgressFragment()).commit();
                     return true;
                 } else if (id==R.id.nav_settings) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new SettingsFragment()).commit();
-                    return true;
-                } else if (id==R.id.nav_start) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new StartFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                     return true;
                 } return false;
             }

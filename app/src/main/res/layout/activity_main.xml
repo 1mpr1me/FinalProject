@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
+        android:id="@+id/fragment_container"
         android:name="ru.myitschool.finalproject.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="628dp"
