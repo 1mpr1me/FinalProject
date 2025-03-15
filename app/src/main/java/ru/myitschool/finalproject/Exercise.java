@@ -1,3 +1,5 @@
+package ru.myitschool.finalproject;
+
 public class Exercise {
     private String title;
     private String description;
