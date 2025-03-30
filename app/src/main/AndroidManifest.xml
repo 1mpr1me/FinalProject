@@ -13,10 +13,8 @@
         android:roundIcon="@drawable/dewatermark_ai_1738948886617"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalProject"
-        tools:targetApi="31">
-        <activity
-            android:name=".BaseActivity"
-            android:exported="false" />
+        tools:targetApi="31"
+        tools:replace="android:label">
         <activity
             android:name=".ForgotActivity"
             android:exported="false" />
@@ -34,6 +32,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

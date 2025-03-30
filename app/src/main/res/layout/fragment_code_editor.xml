@@ -1,46 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.slidingpanelayout.widget.SlidingPaneLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/exercise_description_panel"
+<androidx.slidingpanelayout.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_pane"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_cream">
-
-    <!-- Exercise Description Panel -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:backgroundTint="@color/light_cream">
-
-        <TextView
-            android:id="@+id/exercise_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Exercise description goes here..."
-            android:textSize="16sp" />
-    </LinearLayout>
+    android:background="@color/black">
 
     <!-- Code Editor Panel -->
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <io.github.kbiakov.codeview.CodeView
-            android:id="@+id/code_editor"
+        <WebView
+            android:id="@+id/codeEditor"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/black" />
+            android:layout_height="0dp"
+            android:background="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/run_code_button"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Toggle Button -->
-        <ImageButton
+
+        <!-- Floating Action Button for Toggling Description -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/toggle_description"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_play" />
-    </FrameLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:backgroundTint="@color/white"
+            android:contentDescription="Toggle Description"
+            android:src="@drawable/arrow_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <Button
+            android:id="@+id/run_code_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_cream"
+            android:fontFamily="@font/coda"
+            android:text="Run Code"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Exercise Description Panel -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_cream">
+
+        <TextView
+            android:id="@+id/exercise_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/light_cream"
+            android:padding="16dp"
+            android:text="Exercise description goes here..."
+            android:textColor="@color/white" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.slidingpanelayout.widget.SlidingPaneLayout>

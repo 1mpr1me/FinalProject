@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id==R.id.nav_settings) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                     return true;
+                } else if(id==R.id.nav_code){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CodeEditorFragment()).commit();
+                    return true;
                 } return false;
             }
         });
