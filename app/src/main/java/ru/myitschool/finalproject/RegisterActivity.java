@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,22 +72,33 @@ public class RegisterActivity extends AppCompatActivity {
                         // Get the user ID
                         String userId = auth.getCurrentUser().getUid();
 
-                        // Create user data
-                        Map<String, Object> userData = new HashMap<>();
-                        userData.put("username", username);
-                        userData.put("email", email);
-                        userData.put("score", 0);
+                        // Set display name
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(username)
+                                .build();
+                        auth.getCurrentUser().updateProfile(profileUpdates)
+                                .addOnCompleteListener(profileTask -> {
+                                    if (profileTask.isSuccessful()) {
+                                        // Create user data
+                                        Map<String, Object> userData = new HashMap<>();
+                                        userData.put("username", username);
+                                        userData.put("email", email);
+                                        userData.put("score", 0);
 
-                        // Save user data to Firebase Database
-                        databaseRef.child("users").child(userId).setValue(userData)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(RegisterActivity.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
+                                        // Save user data to Firebase Database
+                                        databaseRef.child("users").child(userId).setValue(userData)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(RegisterActivity.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
+                                                });
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this, "Failed to set display name", Toast.LENGTH_SHORT).show();
+                                    }
                                 });
                     } else {
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

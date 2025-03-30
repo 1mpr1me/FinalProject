@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new LessonFragment();
             } else if (itemId == R.id.nav_practise) {
                 selectedFragment = new PractiseFragment();
-            } else if (itemId == R.id.nav_leaderboard) {
-                selectedFragment = new LeaderboardFragment();
+            } else if (itemId == R.id.nav_messages) {
+                selectedFragment = new MessagesFragment();
             } else if (itemId == R.id.nav_profile) {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.nav_settings) {

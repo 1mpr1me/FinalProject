@@ -25,11 +25,11 @@ public class PractiseFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_practise, container, false);
         recyclerView = view.findViewById(R.id.exercise_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         loadExercises();
         adapter = new ExerciseAdapter(exercises, this::onExerciseClick);
         recyclerView.setAdapter(adapter);
-        
+
         return view;
     }
 
