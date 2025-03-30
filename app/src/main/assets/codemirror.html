@@ -6,18 +6,61 @@
     <title>Code Editor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/comment/comment.min.js"></script>
+    <!-- Add theme stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/nord.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: #2E3440; /* Matching background_dark color */
+        }
+        .CodeMirror {
+            height: 100vh;
+            font-size: 14px;
+        }
+        /* Custom styling for better visibility */
+        .CodeMirror-gutters {
+            background: #3B4252 !important;
+            border-right: 1px solid #434C5E !important;
+        }
+        .CodeMirror-linenumber {
+            color: #D8DEE9 !important;
+        }
+    </style>
     <script>
+        let editor;
         function initEditor() {
-            window.editor = CodeMirror(document.body, {
-                mode: "javascript",
+            editor = CodeMirror(document.body, {
+                mode: "python",
+                theme: "nord",  // Using Nord theme which has softer colors
                 lineNumbers: true,
-                autoCloseBrackets: true
+                autoCloseBrackets: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+                matchBrackets: true
             });
+            
+            // Set initial content
+            editor.setValue("# Write your Python code here\n");
+        }
+
+        function sendCode() {
+            try {
+                const code = editor.getValue();
+                Android.sendCodeToAndroid(code);
+                return code;
+            } catch (error) {
+                console.error("Error sending code:", error);
+                return "# Error: Could not get code from editor";
+            }
         }
     </script>
 </head>
-<body onload="initEditor()"></body>
+<body onload="initEditor()">
+</body>
 </html>

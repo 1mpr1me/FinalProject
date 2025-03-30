@@ -3,15 +3,8 @@ package ru.myitschool.finalproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,49 +13,78 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    FirebaseAuth Auth;
-    FirebaseUser user;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Auth = FirebaseAuth.getInstance();
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        user = Auth.getCurrentUser();
-        if (user == null){
-            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(i);
-            finish();
+        mAuth = FirebaseAuth.getInstance();
+        
+        // Set up auth state listener
+        mAuthListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user == null) {
+                // User is signed out
+                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(loginIntent);
+                finish();
+            }
+        };
+
+        // Set default fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new LessonFragment())
+                    .commit();
         }
 
-        //---------------------------------------------------------------------------
+        setupNavigation();
+    }
 
-        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                if(id==R.id.nav_home){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-                    return true;
-                } else if (id==R.id.nav_lessons) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LessonsFragment()).commit();
-                    return true;
-                } else if (id==R.id.nav_progress) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProgressFragment()).commit();
-                    return true;
-                } else if (id==R.id.nav_settings) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
-                    return true;
-                } else if(id==R.id.nav_code){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CodeEditorFragment()).commit();
-                    return true;
-                } return false;
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    private void setupNavigation() {
+        BottomNavigationView navView = findViewById(R.id.bottom_navigation);
+        navView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_lesson) {
+                selectedFragment = new LessonFragment();
+            } else if (itemId == R.id.nav_practise) {
+                selectedFragment = new PractiseFragment();
+            } else if (itemId == R.id.nav_leaderboard) {
+                selectedFragment = new LeaderboardFragment();
+            } else if (itemId == R.id.nav_profile) {
+                selectedFragment = new ProfileFragment();
+            } else if (itemId == R.id.nav_settings) {
+                selectedFragment = new SettingsFragment();
             }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+                return true;
+            }
+            return false;
         });
-
-
     }
 }

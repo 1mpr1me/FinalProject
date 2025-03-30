@@ -5,46 +5,64 @@
     android:id="@+id/sliding_pane"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/background_dark">
 
     <!-- Code Editor Panel -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- WebView for Code Editor -->
         <WebView
             android:id="@+id/codeEditor"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/run_code_button"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@color/background_dark"
+            app:layout_constraintBottom_toTopOf="@+id/output"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="2"
+            tools:layout_editor_absoluteX="0dp" />
 
-
-        <!-- Floating Action Button for Toggling Description -->
+        <!-- Toggle Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/toggle_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/charcoal"
             android:contentDescription="Toggle Description"
             android:src="@drawable/arrow_right"
+            app:tint="@color/text_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Output TextView -->
+        <TextView
+            android:id="@+id/output"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/charcoal"
+            android:padding="8dp"
+            android:text="Output will appear here"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:gravity="start|top"
+            app:layout_constraintBottom_toTopOf="@+id/run_code_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible" />
 
+        <!-- Run Code Button -->
         <Button
             android:id="@+id/run_code_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/light_cream"
+            android:background="@color/accent_soft"
             android:fontFamily="@font/coda"
             android:text="Run Code"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -52,7 +70,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_cream">
+        android:background="@color/charcoal">
 
         <TextView
             android:id="@+id/exercise_description"
@@ -61,10 +79,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/light_cream"
+            android:background="@color/charcoal"
             android:padding="16dp"
             android:text="Exercise description goes here..."
-            android:textColor="@color/white" />
+            android:textColor="@color/text_primary" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.slidingpanelayout.widget.SlidingPaneLayout>

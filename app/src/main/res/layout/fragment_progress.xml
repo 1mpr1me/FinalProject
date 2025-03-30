@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalendarFragment"
-    android:background="@color/light_cream"
-    android:layout_gravity="center">
-
-    <!-- TODO: Update blank fragment layout -->
+    android:background="@color/background_dark">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="243dp"
-        android:layout_height="59dp"
-        android:fontFamily="@font/coda"
-        android:text="Progress"
-        android:textColor="@color/charcoal"
-        android:textSize="30sp" />
-</FrameLayout>
+        android:id="@+id/leaderboard_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Leaderboard"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/leaderboard_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/leaderboard_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

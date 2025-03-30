@@ -1,8 +1,5 @@
 package ru.myitschool.finalproject;
 
-import ru.myitschool.finalproject.Exercise;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,29 +13,29 @@ import java.util.List;
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
     private List<Exercise> exercises;
+    private OnExerciseClickListener listener;
 
-    public ExerciseAdapter(List<Exercise> exercises) {
+    public interface OnExerciseClickListener {
+        void onExerciseClick(Exercise exercise);
+    }
+
+    public ExerciseAdapter(List<Exercise> exercises, OnExerciseClickListener listener) {
         this.exercises = exercises;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ExerciseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercise, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_exercise, parent, false);
         return new ExerciseViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder holder, int position) {
         Exercise exercise = exercises.get(position);
-        holder.title.setText(exercise.getTitle());
-        holder.description.setText(exercise.getDescription());
-        holder.difficulty.setText(exercise.getDifficulty());
-
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(exercise.getUrl()));
-            v.getContext().startActivity(intent);
-        });
+        holder.bind(exercise);
     }
 
     @Override
@@ -46,14 +43,32 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         return exercises.size();
     }
 
-    public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView title, description, difficulty;
+    class ExerciseViewHolder extends RecyclerView.ViewHolder {
+        private TextView titleView;
+        private TextView descriptionView;
+        private TextView difficultyView;
+        private TextView categoryView;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.textTitle);
-            description = itemView.findViewById(R.id.textDescription);
-            difficulty = itemView.findViewById(R.id.textDifficulty);
+            titleView = itemView.findViewById(R.id.exercise_title);
+            descriptionView = itemView.findViewById(R.id.exercise_description);
+            difficultyView = itemView.findViewById(R.id.exercise_difficulty);
+            categoryView = itemView.findViewById(R.id.exercise_category);
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onExerciseClick(exercises.get(position));
+                }
+            });
+        }
+
+        public void bind(Exercise exercise) {
+            titleView.setText(exercise.getTitle());
+            descriptionView.setText(exercise.getDescription());
+            difficultyView.setText(exercise.getDifficulty());
+            categoryView.setText(exercise.getCategory());
         }
     }
 }

@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.google.gms.google.services)
     id 'com.android.application'
-    id 'com.chaquo.python'}
+    id("com.chaquo.python")
+}
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services' // Add this line
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     namespace 'ru.myitschool.finalproject'
@@ -17,11 +19,21 @@ android {
         versionCode 1
         versionName "1.0"
         ndk {
-            abiFilters "arm64-v8a", "x86_64"
+            abiFilters "arm64-v8a", "x86", "x86_64"
+        }
+        python {
+            version "3.11"
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets {
+        main {
+            python.srcDir "scr/main/python"
+        }
+    }
+
 
     buildTypes {
         release {
@@ -33,6 +45,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    buildToolsVersion '34.0.0'
 
 }
 
