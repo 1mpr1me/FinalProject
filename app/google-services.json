@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "939771462384",
+    "firebase_url": "https://sicfinalproject-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sicfinalproject",
+    "storage_bucket": "sicfinalproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939771462384:android:51e104324ca4e651e5b835",
+        "android_client_info": {
+          "package_name": "ru.myitschool.finalproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANscEr3lumIAU22-mW21N3_TSuPJoEFIw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
