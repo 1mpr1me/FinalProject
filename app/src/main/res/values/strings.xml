@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FinalProject</string>
+    <string name="app_name">CodeShare</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="messages">Messages</string>
@@ -26,4 +26,10 @@
     <string name="no_friend_requests">No friend requests</string>
     <string name="send">Send</string>
     <string name="friends">Friends</string>
+    <string name="already_friends">You are already friends with this user</string>
+    <string name="request_already_sent">Friend request already sent</string>
+    <string name="friend_added">Friend added successfully</string>
+    <string name="error_accepting_request">Error accepting friend request</string>
+    <string name="request_rejected">Friend request rejected</string>
+    <string name="error_rejecting_request">Error rejecting friend request</string>
 </resources>

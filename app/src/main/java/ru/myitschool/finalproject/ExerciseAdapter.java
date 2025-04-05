@@ -43,6 +43,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         return exercises.size();
     }
 
+    public void updateExercises(List<Exercise> newExercises) {
+        this.exercises = newExercises;
+        notifyDataSetChanged();
+    }
+
     class ExerciseViewHolder extends RecyclerView.ViewHolder {
         private TextView titleView;
         private TextView descriptionView;

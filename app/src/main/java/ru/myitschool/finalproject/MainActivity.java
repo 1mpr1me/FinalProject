@@ -65,16 +65,16 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
-            if (itemId == R.id.nav_lesson) {
+            if (itemId == R.id.navigation_lessons) {
                 selectedFragment = new LessonFragment();
-            } else if (itemId == R.id.nav_practise) {
+            } else if (itemId == R.id.navigation_practise) {
                 selectedFragment = new PractiseFragment();
-            } else if (itemId == R.id.nav_messages) {
+            } else if (itemId == R.id.navigation_community) {
+                selectedFragment = new CommunityFragment();
+            } else if (itemId == R.id.navigation_messages) {
                 selectedFragment = new MessagesFragment();
-            } else if (itemId == R.id.nav_profile) {
+            } else if (itemId == R.id.navigation_profile) {
                 selectedFragment = new ProfileFragment();
-            } else if (itemId == R.id.nav_settings) {
-                selectedFragment = new SettingsFragment();
             }
 
             if (selectedFragment != null) {
