@@ -1,5 +1,6 @@
 package ru.myitschool.finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,10 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
     private RecyclerView recyclerView;
     private FloatingActionButton fabAddPost;
     private DatabaseReference postsRef;
+    private DatabaseReference friendsRef;
     private FirebaseAuth mAuth;
     private List<Post> posts;
+    private List<String> friendIds;
     private PostAdapter adapter;
 
     @Override
@@ -38,7 +41,9 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         postsRef = FirebaseDatabase.getInstance().getReference("posts");
+        friendsRef = FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid()).child("friends");
         posts = new ArrayList<>();
+        friendIds = new ArrayList<>();
     }
 
     @Nullable
@@ -64,27 +69,34 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
             }
         });
         
-        // Load posts
-        loadPosts();
+        // Load friends first, then load posts
+        loadFriends();
         
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void loadFriends() {
+        friendsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                friendIds.clear();
+                for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                    String friendId = friendSnapshot.getKey();
+                    if (friendId != null) {
+                        friendIds.add(friendId);
+                    }
+                }
+                // After loading friends, load posts
+                loadPosts();
+            }
 
-        RecyclerView postsRecyclerView = view.findViewById(R.id.posts_recycler_view);
-        postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new PostAdapter(getContext(), posts, this);
-        postsRecyclerView.setAdapter(adapter);
-
-        loadPosts();
-    }
-
-    private void showCreatePostDialog() {
-        // TODO: Implement create post dialog
-        Toast.makeText(getContext(), "Create post functionality coming soon!", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), 
+                    "Error loading friends: " + databaseError.getMessage(), 
+                    Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadPosts() {
@@ -94,7 +106,7 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
                 posts.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    if (post != null) {
+                    if (post != null && (friendIds.contains(post.getUserId()) || post.getUserId().equals(mAuth.getCurrentUser().getUid()))) {
                         posts.add(post);
                     }
                 }
@@ -131,5 +143,20 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
     public void onMenuClicked(Post post, View anchor) {
         // TODO: Implement post menu functionality
         Toast.makeText(getContext(), "Post menu coming soon!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onShareClicked(Post post) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareText = post.getDescription() + "\n\nShared from CodeHub";
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        startActivity(Intent.createChooser(shareIntent, "Share post"));
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // ... existing code ...
     }
 } 

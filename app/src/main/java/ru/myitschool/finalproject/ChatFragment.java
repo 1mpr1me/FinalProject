@@ -130,10 +130,52 @@ public class ChatFragment extends Fragment {
 
         String messageText = messageInput.getText().toString().trim();
         if (!messageText.isEmpty()) {
-            String conversationId = getConversationId(currentUser.getUid(), friendId);
-            Message message = new Message(messageText, currentUser.getUid());
-            
-            databaseRef.child("conversations").child(conversationId).child("messages")
+            if (friendId.equals("ai_assistant")) {
+                // Handle AI messages
+                String conversationId = getConversationId(currentUser.getUid(), "ai_assistant");
+                
+                // Save user message to Firebase
+                Message userMessage = new Message(messageText, currentUser.getUid());
+                databaseRef.child("conversations").child(conversationId).child("messages")
+                    .push().setValue(userMessage);
+                
+                messageInput.setText("");
+
+                // Get code from message if it's a code message
+                String codeToAnalyze = "";
+                if (messages.size() > 1) {
+                    Message lastMessage = messages.get(messages.size() - 2);
+                    if (lastMessage.getType() != null && lastMessage.getType().equals("code")) {
+                        codeToAnalyze = lastMessage.getCode();
+                    }
+                }
+
+                // Show typing indicator
+                chatFriendStatus.setText("Typing...");
+                
+                // Get AI response
+                AIAssistant aiAssistant = new AIAssistant();
+                aiAssistant.getCodeAssistance(codeToAnalyze, messageText, response -> {
+                    requireActivity().runOnUiThread(() -> {
+                        // Save AI response to Firebase
+                        Message aiMessage = new Message(response, "ai_assistant");
+                        databaseRef.child("conversations").child(conversationId).child("messages")
+                            .push().setValue(aiMessage)
+                            .addOnSuccessListener(aVoid -> {
+                                chatFriendStatus.setText("Online");
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), R.string.error_sending_message, Toast.LENGTH_SHORT).show();
+                                chatFriendStatus.setText("Online");
+                            });
+                    });
+                });
+            } else {
+                // Regular chat message
+                String conversationId = getConversationId(currentUser.getUid(), friendId);
+                Message message = new Message(messageText, currentUser.getUid());
+                
+                databaseRef.child("conversations").child(conversationId).child("messages")
                     .push().setValue(message)
                     .addOnSuccessListener(aVoid -> {
                         messageInput.setText("");
@@ -142,6 +184,7 @@ public class ChatFragment extends Fragment {
                     .addOnFailureListener(e -> 
                         Toast.makeText(getContext(), R.string.error_sending_message, Toast.LENGTH_SHORT).show()
                     );
+            }
         }
     }
 

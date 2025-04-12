@@ -318,7 +318,10 @@ public class MessagesFragment extends Fragment {
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // Keep AI Assistant as first friend
                             friends.clear();
+                            friends.add(new Friend("ai_assistant", "AI Assistant"));
+                            
                             for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                                 String friendId = friendSnapshot.getKey();
                                 String friendName = friendSnapshot.getValue(String.class);
@@ -338,18 +341,33 @@ public class MessagesFragment extends Fragment {
     }
 
     private void onFriendSelected(Friend friend) {
-        // Navigate to ChatFragment
-        ChatFragment chatFragment = ChatFragment.newInstance(friend.getId(), friend.getName());
-        getParentFragmentManager().beginTransaction()
+        if (friend.getId().equals("ai_assistant")) {
+            // Open chat with AI Assistant
+            ChatFragment chatFragment = ChatFragment.newInstance("ai_assistant", "AI Assistant");
+            getParentFragmentManager().beginTransaction()
                 .setCustomAnimations(
-                    R.anim.slide_in_right,  // enter
-                    R.anim.slide_out_left,   // exit
-                    R.anim.slide_in_left,    // popEnter
-                    R.anim.slide_out_right   // popExit
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
                 )
                 .replace(R.id.fragment_container, chatFragment)
                 .addToBackStack(null)
                 .commit();
+        } else {
+            // Open chat with regular friend
+            ChatFragment chatFragment = ChatFragment.newInstance(friend.getId(), friend.getName());
+            getParentFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+                )
+                .replace(R.id.fragment_container, chatFragment)
+                .addToBackStack(null)
+                .commit();
+        }
     }
 
     public static class Friend {

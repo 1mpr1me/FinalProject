@@ -19,117 +19,69 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.slidingpanelayout.widget.SlidingPaneLayout
-        android:id="@+id/sliding_pane"
+    <!-- Main Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background_dark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Main Content -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!-- Code Editor -->
+        <WebView
+            android:id="@+id/codeEditor"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/background_dark">
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/output"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Code Editor -->
-            <WebView
-                android:id="@+id/codeEditor"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/output"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Solution Editor -->
-            
-
-            <WebView
-                android:id="@+id/solutionEditor"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/output"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Output Area -->
-            <TextView
-                android:id="@+id/output"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@color/charcoal"
-                android:padding="8dp"
-                android:text="Output will appear here"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:gravity="start|top"
-                app:layout_constraintBottom_toTopOf="@+id/button_container"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <!-- Button Container -->
-            <LinearLayout
-                android:id="@+id/button_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <ImageButton
-                    android:id="@+id/run_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_media_play"
-                    android:tint="@color/text_primary"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Run Code" />
-
-                <ImageButton
-                    android:id="@+id/share_code_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_share"
-                    android:tint="@color/text_primary"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Share Code"
-                    android:layout_marginStart="8dp" />
-
-            </LinearLayout>
-
-            <!-- AI View Container -->
-            <FrameLayout
-                android:id="@+id/ai_view_container"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- Exercise Description Panel -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!-- Output Area -->
+        <TextView
+            android:id="@+id/output"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/charcoal">
+            android:layout_height="100dp"
+            android:background="@color/charcoal"
+            android:padding="8dp"
+            android:text="Output will appear here"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:gravity="start|top"
+            app:layout_constraintBottom_toTopOf="@+id/button_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/exercise_description"
-                android:layout_width="match_parent"
+        <!-- Button Container -->
+        <LinearLayout
+            android:id="@+id/button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageButton
+                android:id="@+id/run_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@color/charcoal"
-                android:padding="16dp"
-                android:text="Exercise description goes here..."
-                android:textColor="@color/text_primary" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:src="@android:drawable/ic_media_play"
+                android:tint="@color/text_primary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Run Code" />
 
-    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+            <ImageButton
+                android:id="@+id/share_code_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_share"
+                android:tint="@color/text_primary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Share Code"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -24,7 +24,7 @@
         android:clipToPadding="false"
         android:background="@color/background_dark"
         app:layout_constraintTop_toBottomOf="@id/exercise_description"
-        app:layout_constraintBottom_toTopOf="@id/bottom_bar" />
+        app:layout_constraintBottom_toTopOf="@id/input_container" />
 
     <ProgressBar
         android:id="@+id/ai_progress"
@@ -38,64 +38,46 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
-        android:id="@+id/bottom_bar"
+        android:id="@+id/input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
         android:background="@color/charcoal"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:id="@+id/input_container"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:background="@color/charcoal">
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:textColorHint="@color/text_secondary"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/prompt_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:hint="Ask about your code..."
+                android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_secondary"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:inputType="textMultiLine"
+                android:maxLines="4" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/prompt_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ask about your code..."
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_secondary"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/send_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:src="@drawable/ic_send"
-                app:tint="@color/text_primary"
-                app:backgroundTint="@color/primary"
-                android:contentDescription="Send message" />
-
-        </LinearLayout>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/charcoal"
-            app:itemIconTint="@color/nav_item_color"
-            app:itemTextColor="@color/nav_item_color"
-            app:menu="@menu/menu_bottom_nav" />
+            android:layout_gravity="bottom"
+            android:src="@drawable/ic_send"
+            app:tint="@color/text_primary"
+            app:backgroundTint="@color/primary"
+            android:contentDescription="Send message" />
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout> 
+</androidx.constraintlayout.widget.ConstraintLayout>

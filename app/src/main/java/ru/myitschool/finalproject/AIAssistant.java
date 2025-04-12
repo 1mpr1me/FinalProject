@@ -1,78 +1,72 @@
 package ru.myitschool.finalproject;
 
-import android.widget.ProgressBar;
-import com.google.gson.Gson;
-import okhttp3.*;
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
+import android.util.Log;
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
+import com.google.ai.client.generativeai.type.Content;
+import android.os.Handler;
+import android.os.Looper;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class AIAssistant {
-    private static final String API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
-    private static final String API_KEY = "YOUR_API_KEY"; // Replace with your API key
-    
-    private final OkHttpClient client;
-    private final Gson gson;
-    private final ExecutorService executor;
+    private static final String TAG = "AIAssistant";
+    private final GenerativeModelFutures model;
+    private final Handler mainHandler;
+    private final Executor executor;
+
     
     public interface ResponseCallback {
         void onResponse(String response);
     }
 
     public AIAssistant() {
-        this.client = new OkHttpClient();
-        this.gson = new Gson();
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "AIzaSyDBbOd38Oh7kONtJEiSKy1FTwcv8GL5JL4");
+        this.model = GenerativeModelFutures.from(gm);
+        this.mainHandler = new Handler(Looper.getMainLooper());
         this.executor = Executors.newSingleThreadExecutor();
     }
 
     public void getCodeAssistance(String code, String prompt, ResponseCallback callback) {
-        String fullPrompt = String.format(
-            "<s>[INST] I am looking at this code:\n\n```\n%s\n```\n\n%s [/INST]</s>",
-            code, prompt
-        );
+        String fullPrompt;
+        if (code != null && !code.isEmpty()) {
+            fullPrompt = String.format(
+                "You are a helpful coding assistant. Here is the code to analyze:\n\n```\n%s\n```\n\n%s",
+                code, prompt
+            );
+        } else {
+            fullPrompt = prompt;
+        }
 
-        RequestBody body = RequestBody.create(
-            MediaType.parse("application/json"),
-            gson.toJson(new AIRequest(fullPrompt))
-        );
-
-        Request request = new Request.Builder()
-            .url(API_URL)
-            .post(body)
-            .addHeader("Authorization", "Bearer " + API_KEY)
+        Content content = new Content.Builder()
+            .addText(fullPrompt)
             .build();
 
-        executor.execute(() -> {
-            try {
-                Response response = client.newCall(request).execute();
-                if (response.isSuccessful() && response.body() != null) {
-                    AIResponse[] responses = gson.fromJson(
-                        response.body().string(),
-                        AIResponse[].class
-                    );
-                    if (responses.length > 0) {
-                        String aiResponse = responses[0].generated_text
-                            .replace(fullPrompt, "")
-                            .trim();
-                        callback.onResponse(aiResponse);
-                        return;
+        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+            @Override
+            public void onSuccess(GenerateContentResponse result) {
+                String text = result.getText();
+                mainHandler.post(() -> {
+                    if (text != null && !text.isEmpty()) {
+                        callback.onResponse(text);
+                    } else {
+                        callback.onResponse("I apologize, but I couldn't generate a response. Please try again.");
                     }
-                }
-                callback.onResponse("Sorry, I couldn't process your request. Please try again.");
-            } catch (IOException e) {
-                callback.onResponse("Error: " + e.getMessage());
+                });
             }
-        });
-    }
 
-    private static class AIRequest {
-        final String inputs;
-        AIRequest(String inputs) {
-            this.inputs = inputs;
-        }
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e(TAG, "Error generating response", t);
+                mainHandler.post(() -> {
+                    callback.onResponse("Error: " + t.getMessage() + ". Please try again.");
+                });
+            }
+        }, executor);
     }
-
-    private static class AIResponse {
-        String generated_text;
-    }
-} 
+}

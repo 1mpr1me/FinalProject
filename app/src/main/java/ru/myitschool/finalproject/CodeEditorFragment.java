@@ -50,27 +50,22 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.core.content.ContextCompat;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class CodeEditorFragment extends Fragment {
 
-    private SlidingPaneLayout slidingPane;
     private WebView codeEditor;
-    private WebView solutionEditor;
     private ImageButton runCodeButton;
     private WebAppInterface webAppInterface;
     private TextView output;
-    private TextView exerciseDescription;
     private String initialCode;
-    private String solutionCode;
     private int exerciseScore;
     private String exerciseTitle;
     private DatabaseReference userRef;
     private FirebaseAuth mAuth;
     private String lastOutput = "";
     private Exercise exercise;
-    private AIAssistant aiAssistant;
-    private View aiView;
-    private boolean isAIActive = false;
+    private View rootView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,40 +85,14 @@ public class CodeEditorFragment extends Fragment {
         if (item.getItemId() == android.R.id.home) {
             requireActivity().onBackPressed();
             return true;
-        } else if (item.getItemId() == R.id.action_code) {
-            switchToCodeView();
-            return true;
-        } else if (item.getItemId() == R.id.action_ai) {
-            switchToAIView();
-            return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void switchToCodeView() {
-        if (isAIActive) {
-            codeEditor.setVisibility(View.VISIBLE);
-            runCodeButton.setVisibility(View.VISIBLE);
-            output.setVisibility(View.VISIBLE);
-            aiView.setVisibility(View.GONE);
-            isAIActive = false;
-        }
-    }
-
-    private void switchToAIView() {
-        if (!isAIActive) {
-            codeEditor.setVisibility(View.GONE);
-            runCodeButton.setVisibility(View.GONE);
-            output.setVisibility(View.GONE);
-            aiView.setVisibility(View.VISIBLE);
-            isAIActive = true;
-        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_code_editor, container, false);
+        rootView = inflater.inflate(R.layout.fragment_code_editor, container, false);
 
         // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -131,16 +100,13 @@ public class CodeEditorFragment extends Fragment {
         userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
         // Initialize UI elements
-        slidingPane = view.findViewById(R.id.sliding_pane);
-        codeEditor = view.findViewById(R.id.codeEditor);
-        solutionEditor = view.findViewById(R.id.solutionEditor);
-        runCodeButton = view.findViewById(R.id.run_button);
-        output = view.findViewById(R.id.output);
-        exerciseDescription = view.findViewById(R.id.exercise_description);
-        ImageButton shareButton = view.findViewById(R.id.share_code_button);
+        codeEditor = rootView.findViewById(R.id.codeEditor);
+        runCodeButton = rootView.findViewById(R.id.run_button);
+        output = rootView.findViewById(R.id.output);
+        ImageButton shareButton = rootView.findViewById(R.id.share_code_button);
 
         // Set up toolbar
-        MaterialToolbar toolbar = view.findViewById(R.id.toolbar);
+        MaterialToolbar toolbar = rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
@@ -149,90 +115,18 @@ public class CodeEditorFragment extends Fragment {
             actionBar.setTitle(exerciseTitle != null ? exerciseTitle : "Code Editor");
         }
 
-        // Initialize AI chat view
-        FrameLayout aiViewContainer = view.findViewById(R.id.ai_view_container);
-        aiView = inflater.inflate(R.layout.view_ai_chat, aiViewContainer, false);
-        
-        // Set up RecyclerView
-        RecyclerView chatRecyclerView = aiView.findViewById(R.id.chat_recycler_view);
-        chatRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        ChatAdapter chatAdapter = new ChatAdapter();
-        chatRecyclerView.setAdapter(chatAdapter);
-
-        // Set up chat input
-        TextInputEditText promptInput = aiView.findViewById(R.id.prompt_input);
-        ImageButton sendButton = aiView.findViewById(R.id.send_button);
-        ProgressBar progressBar = aiView.findViewById(R.id.ai_progress);
-
-        // Initialize AI Assistant
-        aiAssistant = new AIAssistant();
-
-        sendButton.setOnClickListener(v -> {
-            String prompt = promptInput.getText().toString().trim();
-            if (!prompt.isEmpty()) {
-                // Add user message to chat
-                chatAdapter.addMessage(new ChatMessage("You", prompt, false));
-                promptInput.setText("");
-
-                // Get current code
-                codeEditor.evaluateJavascript("javascript:sendCode()", code -> {
-                    if (code != null && !code.equals("null")) {
-                        String codeText = code.substring(1, code.length() - 1)
-                            .replace("\\n", "\n")
-                            .replace("\\\"", "\"");
-                        
-                        // Show progress
-                        progressBar.setVisibility(View.VISIBLE);
-                        
-                        // Call AI API
-                        aiAssistant.getCodeAssistance(codeText, prompt, response -> {
-                            requireActivity().runOnUiThread(() -> {
-                                progressBar.setVisibility(View.GONE);
-                                chatAdapter.addMessage(new ChatMessage("AI Assistant", response, true));
-                                chatRecyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
-                            });
-                        });
-                    }
-                });
-            }
-        });
-
-        aiView.setVisibility(View.GONE);
-        aiViewContainer.addView(aiView);
-
         // Get exercise data from arguments
         Bundle args = getArguments();
         if (args != null) {
-            // Try to get exercise as Parcelable first
             exercise = args.getParcelable("exercise");
             if (exercise != null) {
                 exerciseTitle = exercise.getTitle();
-                String description = exercise.getDescription();
                 initialCode = exercise.getCode();
                 exerciseScore = exercise.getScore();
                 
-                // Set exercise description and toolbar title
-                exerciseDescription.setText(exerciseTitle + "\n\n" + description);
+                // Set toolbar title
                 if (actionBar != null) {
                     actionBar.setTitle(exerciseTitle);
-                }
-            } else {
-                // Try to get individual fields
-                String title = args.getString("title");
-                String description = args.getString("description");
-                String code = args.getString("code");
-                int score = args.getInt("score", 0);
-                
-                if (title != null && description != null) {
-                    exerciseTitle = title;
-                    initialCode = code != null ? code : "";
-                    exerciseScore = score;
-                    
-                    // Set exercise description and toolbar title
-                    exerciseDescription.setText(title + "\n\n" + description);
-                    if (actionBar != null) {
-                        actionBar.setTitle(title);
-                    }
                 }
             }
         }
@@ -240,9 +134,8 @@ public class CodeEditorFragment extends Fragment {
         // Initialize WebAppInterface
         webAppInterface = new WebAppInterface(requireContext());
 
-        // Configure WebViews
+        // Configure WebView
         setupWebView(codeEditor, initialCode);
-        setupWebView(solutionEditor, solutionCode);
 
         // Initialize Python
         if (!Python.isStarted()) {
@@ -253,7 +146,7 @@ public class CodeEditorFragment extends Fragment {
         runCodeButton.setOnClickListener(v -> runCode());
         shareButton.setOnClickListener(v -> showShareDialog());
 
-        return view;
+        return rootView;
     }
 
     private void setupWebView(WebView webView, String initialCode) {
@@ -548,55 +441,6 @@ public class CodeEditorFragment extends Fragment {
         return uid1.compareTo(uid2) < 0 ? uid1 + "_" + uid2 : uid2 + "_" + uid1;
     }
 
-    private void showAIAssistDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_ai_assist, null);
-        TextInputEditText promptInput = dialogView.findViewById(R.id.ai_prompt_input);
-        ProgressBar progressBar = dialogView.findViewById(R.id.ai_progress);
-        TextView responseText = dialogView.findViewById(R.id.ai_response);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext())
-            .setView(dialogView)
-            .setPositiveButton("Ask AI", (dialog, which) -> {
-                String prompt = promptInput.getText().toString().trim();
-                if (!prompt.isEmpty()) {
-                    // Get current code
-                    codeEditor.evaluateJavascript("javascript:sendCode()", code -> {
-                        if (code != null && !code.equals("null")) {
-                            String codeText = code.substring(1, code.length() - 1)
-                                .replace("\\n", "\n")
-                                .replace("\\\"", "\"");
-                            
-                            // Show progress
-                            progressBar.setVisibility(View.VISIBLE);
-                            promptInput.setVisibility(View.GONE);
-                            responseText.setVisibility(View.GONE);
-                            
-                            // Call AI API
-                            callAIAssistant(codeText, prompt, responseText, progressBar);
-                        }
-                    });
-                }
-            })
-            .setNegativeButton("Cancel", null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        // Customize dialog buttons
-        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        positiveButton.setTextColor(getResources().getColor(R.color.primary));
-    }
-
-    private void callAIAssistant(String code, String prompt, TextView responseText, ProgressBar progressBar) {
-        aiAssistant.getCodeAssistance(code, prompt, response -> {
-            requireActivity().runOnUiThread(() -> {
-                progressBar.setVisibility(View.GONE);
-                responseText.setVisibility(View.VISIBLE);
-                responseText.setText(response);
-            });
-        });
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -605,12 +449,6 @@ public class CodeEditorFragment extends Fragment {
             codeEditor.clearHistory();
             codeEditor.clearCache(true);
             codeEditor.destroy();
-        }
-        if (solutionEditor != null) {
-            solutionEditor.loadUrl("about:blank");
-            solutionEditor.clearHistory();
-            solutionEditor.clearCache(true);
-            solutionEditor.destroy();
         }
     }
 }

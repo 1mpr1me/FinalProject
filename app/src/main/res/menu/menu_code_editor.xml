@@ -3,16 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <item
-        android:id="@+id/action_code"
-        android:title="Code"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:id="@+id/action_share"
+        android:title="Share"
+        android:icon="@android:drawable/ic_menu_share"
         android:orderInCategory="1"
         app:showAsAction="always" />
         
-    <item
-        android:id="@+id/action_ai"
-        android:title="AI Assistant"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:orderInCategory="2"
-        app:showAsAction="always" />
 </menu> 
