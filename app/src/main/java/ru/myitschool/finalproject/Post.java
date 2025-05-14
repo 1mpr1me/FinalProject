@@ -1,5 +1,8 @@
 package ru.myitschool.finalproject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Post {
     private String id;
     private String userId;
@@ -11,11 +14,13 @@ public class Post {
     private long timestamp;
     private int likeCount;
     private int commentCount;
+    private Map<String, Boolean> likes; // Store User IDs who liked the Post
 
     // Required empty constructor for Firebase
     public Post() {
         this.likeCount = 0;
         this.commentCount = 0;
+        this.likes = new HashMap<>();
     }
 
     public String getId() {
@@ -98,7 +103,19 @@ public class Post {
         this.commentCount = commentCount;
     }
 
-    // For backward compatibility with PostAdapter
+    public Map<String, Boolean> getLikes() {
+        return likes != null ? likes : new HashMap<>();
+    }
+
+    public void setLikes(Map<String, Boolean> likes) {
+        this.likes = likes;
+    }
+
+    public boolean isLikedBy(String userId) {
+        return likes != null && likes.containsKey(userId);
+    }
+
+    // For backward compatibility with ru.myitschool.finalproject.PostAdapter
     public String getContent() {
         return description;
     }
@@ -107,3 +124,7 @@ public class Post {
         this.description = content;
     }
 } 
+
+
+
+

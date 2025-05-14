@@ -28,3 +28,7 @@ public class ExercisePagerAdapter extends FragmentStateAdapter {
         return 2; // Number of tabs
     }
 } 
+
+
+
+

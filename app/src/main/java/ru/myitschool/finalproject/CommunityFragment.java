@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,11 +19,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class CommunityFragment extends Fragment implements PostAdapter.OnPostInteractionListener {
     private RecyclerView recyclerView;
@@ -32,16 +34,18 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
     private DatabaseReference postsRef;
     private DatabaseReference friendsRef;
     private FirebaseAuth mAuth;
-    private List<Post> posts;
+    private List<ru.myitschool.finalproject.Post> posts;
     private List<String> friendIds;
     private PostAdapter adapter;
+    private String currentUserId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        currentUserId = mAuth.getCurrentUser().getUid();
         postsRef = FirebaseDatabase.getInstance().getReference("posts");
-        friendsRef = FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid()).child("friends");
+        friendsRef = FirebaseDatabase.getInstance().getReference("users").child(currentUserId).child("friends");
         posts = new ArrayList<>();
         friendIds = new ArrayList<>();
     }
@@ -54,7 +58,7 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
         recyclerView = view.findViewById(R.id.posts_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         
-        adapter = new PostAdapter(getContext(), posts, this);
+        adapter = new PostAdapter(getContext(), posts, this, currentUserId);
         recyclerView.setAdapter(adapter);
         
         fabAddPost = view.findViewById(R.id.fab_add_post);
@@ -129,19 +133,51 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
 
     @Override
     public void onLikeClicked(Post post) {
-        // TODO: Implement like functionality
-        Toast.makeText(getContext(), "Like functionality coming soon!", Toast.LENGTH_SHORT).show();
+        DatabaseReference postRef = postsRef.child(post.getId());
+        
+        postRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Post p = mutableData.getValue(Post.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                Map<String, Boolean> likes = p.getLikes();
+                if (likes.containsKey(currentUserId)) {
+                    // Unlike the ru.myitschool.finalproject.Post
+                    p.setLikeCount(p.getLikeCount() - 1);
+                    likes.remove(currentUserId);
+                } else {
+                    // Like the ru.myitschool.finalproject.Post
+                    p.setLikeCount(p.getLikeCount() + 1);
+                    likes.put(currentUserId, true);
+                }
+                p.setLikes(likes);
+
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                if (error != null) {
+                    Toast.makeText(getContext(), "Failed to update like", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
     public void onCommentClicked(Post post) {
-        // TODO: Implement comment functionality
-        Toast.makeText(getContext(), "Comment functionality coming soon!", Toast.LENGTH_SHORT).show();
+        CommentsBottomSheetFragment bottomSheet = CommentsBottomSheetFragment.newInstance(post.getId());
+        bottomSheet.show(getChildFragmentManager(), "CommentsBottomSheet");
     }
 
     @Override
     public void onMenuClicked(Post post, View anchor) {
-        // TODO: Implement post menu functionality
+        // TODO: Implement Post menu functionality
         Toast.makeText(getContext(), "Post menu coming soon!", Toast.LENGTH_SHORT).show();
     }
 
@@ -151,7 +187,7 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
         shareIntent.setType("text/plain");
         String shareText = post.getDescription() + "\n\nShared from CodeHub";
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-        startActivity(Intent.createChooser(shareIntent, "Share post"));
+        startActivity(Intent.createChooser(shareIntent, "Share Post"));
     }
 
     @Override
@@ -160,3 +196,8 @@ public class CommunityFragment extends Fragment implements PostAdapter.OnPostInt
         // ... existing code ...
     }
 } 
+
+
+
+
+

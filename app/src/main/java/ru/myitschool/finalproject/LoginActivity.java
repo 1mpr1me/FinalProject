@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         // Set click listeners
         loginButton.setOnClickListener(v -> loginUser());
         registerLink.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(ru.myitschool.finalproject.LoginActivity.this, ru.myitschool.finalproject.RegisterActivity.class);
             startActivity(intent);
             finish();
         });
@@ -73,19 +74,19 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         startMainActivity();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ru.myitschool.finalproject.LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void loginWithUsername(String username, String password) {
-        // Query the database to find the user with the given username
+        // Query the database to find the ru.myitschool.finalproject.User with the given username
         databaseRef.child("users").orderByChild("username").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            // Get the first user with this username
+                            // Get the first User with this username
                             String email = null;
                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                 email = userSnapshot.child("email").getValue(String.class);
@@ -110,8 +111,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(ru.myitschool.finalproject.LoginActivity.this, ru.myitschool.finalproject.MainActivity.class);
         startActivity(intent);
         finish();
     }
 }
+
+

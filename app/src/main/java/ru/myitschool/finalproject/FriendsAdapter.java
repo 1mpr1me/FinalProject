@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
-    private List<MessagesFragment.Friend> friends;
+    private List<Friend> friends;
     private OnFriendClickListener listener;
 
     public interface OnFriendClickListener {
-        void onFriendClick(MessagesFragment.Friend friend);
+        void onFriendClick(Friend friend);
     }
 
-    public FriendsAdapter(List<MessagesFragment.Friend> friends, OnFriendClickListener listener) {
+    public FriendsAdapter(List<Friend> friends, OnFriendClickListener listener) {
         this.friends = friends;
         this.listener = listener;
     }
@@ -33,7 +33,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
     @Override
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
-        MessagesFragment.Friend friend = friends.get(position);
+        Friend friend = friends.get(position);
         holder.friendName.setText(friend.getName());
         holder.itemView.setOnClickListener(v -> listener.onFriendClick(friend));
     }
@@ -52,3 +52,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         }
     }
 } 
+
+
+
+
+

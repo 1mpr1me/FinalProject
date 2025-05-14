@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private Context context;
     private List<Post> posts;
     private OnPostInteractionListener listener;
+    private String currentUserId;
 
     public interface OnPostInteractionListener {
         void onLikeClicked(Post post);
@@ -33,10 +33,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         void onMenuClicked(Post post, View anchor);
     }
 
-    public PostAdapter(Context context, List<Post> posts, OnPostInteractionListener listener) {
+    public PostAdapter(Context context, List<Post> posts, OnPostInteractionListener listener, String currentUserId) {
         this.context = context;
         this.posts = posts;
         this.listener = listener;
+        this.currentUserId = currentUserId;
     }
 
     @NonNull
@@ -50,7 +51,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = posts.get(position);
         
-        // Load user avatar
+        // Load User avatar
         if (post.getUserAvatar() != null && !post.getUserAvatar().isEmpty()) {
             Glide.with(context)
                 .load(post.getUserAvatar())
@@ -59,7 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 .into(holder.userAvatar);
         }
 
-        // Set user name (in header and description)
+        // Set User name (in header and description)
         holder.userName.setText(post.getUserName());
         holder.userNameDescription.setText(post.getUserName());
 
@@ -71,7 +72,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         // Set content
         holder.content.setText(post.getDescription());
 
-        // Handle post image
+        // Handle Post image
         if (post.getImageUrl() != null && !post.getImageUrl().isEmpty()) {
             holder.postImage.setVisibility(View.VISIBLE);
             Glide.with(context)
@@ -91,10 +92,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             holder.codeView.setVisibility(View.GONE);
         }
 
-        // Set counts
+        // Set counts and like state
         String likeCountText = post.getLikeCount() + " likes";
         holder.likeCount.setText(likeCountText);
         
+        // Update like button state
+        if (post.isLikedBy(currentUserId)) {
+            holder.likeButton.setImageResource(R.drawable.ic_like_filled);
+        } else {
+            holder.likeButton.setImageResource(R.drawable.ic_like_outline);
+        }
+
         String commentCountText = "View all " + post.getCommentCount() + " comments";
         holder.commentCount.setText(commentCountText);
 
@@ -199,4 +207,4 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             menuButton = itemView.findViewById(R.id.post_menu);
         }
     }
-} 
+}

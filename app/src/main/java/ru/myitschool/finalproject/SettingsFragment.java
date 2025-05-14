@@ -202,7 +202,7 @@ public class SettingsFragment extends Fragment {
 
     private void deleteAccount() {
         if (currentUser != null) {
-            // Delete user data from Realtime Database
+            // Delete ru.myitschool.finalproject.User data from Realtime Database
             userRef.removeValue()
                     .addOnSuccessListener(aVoid -> {
                         // Delete Firebase Auth account
@@ -217,7 +217,7 @@ public class SettingsFragment extends Fragment {
                                 });
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Failed to delete user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Failed to delete ru.myitschool.finalproject.User data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
     }
@@ -243,3 +243,7 @@ public class SettingsFragment extends Fragment {
         requireActivity().finish();
     }
 }
+
+
+
+

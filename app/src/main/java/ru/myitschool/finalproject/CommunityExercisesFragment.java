@@ -68,15 +68,19 @@ public class CommunityExercisesFragment extends Fragment {
     }
 
     private void onExerciseClick(Exercise exercise) {
-        CodeEditorFragment codeEditorFragment = new CodeEditorFragment();
+        CodeEditorFragment fragment = new CodeEditorFragment();
         Bundle args = new Bundle();
         args.putParcelable("exercise", exercise);
-        codeEditorFragment.setArguments(args);
+        fragment.setArguments(args);
         
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, codeEditorFragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
 } 
+
+
+
+

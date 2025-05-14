@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,10 +19,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,17 +50,17 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
         LessonAdapter adapter = new LessonAdapter(lessons, this);
         lessonList.setAdapter(adapter);
 
-        // Check user's progress and update lesson availability
+        // Check ru.myitschool.finalproject.User's progress and update ru.myitschool.finalproject.Lesson availability
         checkUserProgress();
 
         return view;
     }
 
-    private List<Lesson> createLessonList() {
+    private List<ru.myitschool.finalproject.Lesson> createLessonList() {
         List<Lesson> lessons = new ArrayList<>();
         
         // Basic Data Structures
-        lessons.add(new Lesson(
+        lessons.add(new ru.myitschool.finalproject.Lesson(
             "Introduction to DSA",
             "Get started with Data Structures and Algorithms",
             "Learn the fundamentals of data structures and algorithms, including:\n\n" +
@@ -75,7 +70,7 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
             "• Basic algorithm analysis\n" +
             "• Problem-solving approaches",
             "lessons/lesson1.html",
-            true,  // First lesson is always available
+            true,  // First ru.myitschool.finalproject.Lesson is always available
             "DSA Basics • Complexity Analysis • Problem Solving"
         ));
 
@@ -151,7 +146,7 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
         ));
 
         // Algorithm Design
-        lessons.add(new Lesson(
+        lessons.add(new ru.myitschool.finalproject.Lesson(
             "Sorting Algorithms",
             "Efficient data organization",
             "Master various sorting algorithms:\n\n" +
@@ -165,7 +160,7 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
             "Sorting • Time Complexity • Space Complexity"
         ));
 
-        lessons.add(new Lesson(
+        lessons.add(new ru.myitschool.finalproject.Lesson(
             "Searching Algorithms",
             "Finding data efficiently",
             "Learn about searching techniques:\n\n" +
@@ -180,7 +175,7 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
         ));
 
         // Advanced Algorithms
-        lessons.add(new Lesson(
+        lessons.add(new ru.myitschool.finalproject.Lesson(
             "Dynamic Programming",
             "Solving complex problems efficiently",
             "Master dynamic programming:\n\n" +
@@ -194,7 +189,7 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
             "Dynamic Programming • Memoization • Optimization"
         ));
 
-        lessons.add(new Lesson(
+        lessons.add(new ru.myitschool.finalproject.Lesson(
             "Greedy Algorithms",
             "Making optimal choices",
             "Learn about greedy algorithms:\n\n" +
@@ -217,18 +212,18 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> completedLessons = new ArrayList<>();
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot lesson : dataSnapshot.getChildren()) {
-                        completedLessons.add(lesson.getKey());
+                    for (DataSnapshot lessonSnapshot : dataSnapshot.getChildren()) {
+                        completedLessons.add(lessonSnapshot.getKey());
                     }
                 }
 
-                // Update lesson availability based on completion
+                // Update ru.myitschool.finalproject.Lesson availability based on completion
                 for (int i = 0; i < lessons.size(); i++) {
                     Lesson lesson = lessons.get(i);
                     if (i == 0) {
-                        lesson.setAvailable(true);  // First lesson is always available
+                        lesson.setAvailable(true);  // First ru.myitschool.finalproject.Lesson is always available
                     } else {
-                        // A lesson is available if the previous lesson is completed
+                        // A ru.myitschool.finalproject.Lesson is available if the previous ru.myitschool.finalproject.Lesson is completed
                         String previousLessonTitle = lessons.get(i - 1).getTitle();
                         lesson.setAvailable(completedLessons.contains(previousLessonTitle));
                     }
@@ -254,7 +249,7 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
             return;
         }
 
-        // Create new instance of LessonContentFragment with lesson data
+        // Create new instance of LessonContentFragment with Lesson data
         LessonContentFragment contentFragment = new LessonContentFragment();
         Bundle args = new Bundle();
         args.putString("title", lesson.getTitle());
@@ -266,7 +261,12 @@ public class LessonFragment extends Fragment implements LessonAdapter.OnLessonCl
         getParentFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, contentFragment)
-                .addToBackStack(null)  // Add to back stack so user can return
+                .addToBackStack(null)  // Add to back stack so ru.myitschool.finalproject.User can return
                 .commit();
     }
 } 
+
+
+
+
+

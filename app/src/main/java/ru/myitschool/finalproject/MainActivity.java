@@ -2,7 +2,6 @@ package ru.myitschool.finalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -25,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         
         // Set up auth state listener
         mAuthListener = firebaseAuth -> {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user == null) {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser == null) {
                 // User is signed out
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -88,3 +87,5 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+
+

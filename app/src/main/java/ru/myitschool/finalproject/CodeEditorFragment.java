@@ -9,33 +9,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,12 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import androidx.core.content.ContextCompat;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class CodeEditorFragment extends Fragment {
 
@@ -64,7 +51,9 @@ public class CodeEditorFragment extends Fragment {
     private DatabaseReference userRef;
     private FirebaseAuth mAuth;
     private String lastOutput = "";
-    private Exercise exercise;
+    private Exercise exercise; // Corrected variable declaration
+    private String exerciseId;
+    private String currentCode;
     private View rootView;
 
     @Override
@@ -115,10 +104,10 @@ public class CodeEditorFragment extends Fragment {
             actionBar.setTitle(exerciseTitle != null ? exerciseTitle : "Code Editor");
         }
 
-        // Get exercise data from arguments
+        // Get Exercise data from arguments
         Bundle args = getArguments();
         if (args != null) {
-            exercise = args.getParcelable("exercise");
+            exercise = args.getParcelable("exercise"); // Corrected parameter name
             if (exercise != null) {
                 exerciseTitle = exercise.getTitle();
                 initialCode = exercise.getCode();
@@ -131,8 +120,7 @@ public class CodeEditorFragment extends Fragment {
             }
         }
 
-        // Initialize WebAppInterface
-        webAppInterface = new WebAppInterface(requireContext());
+        // Initialize WebAppInterface webAppInterface = new ru.myitschool.finalproject.WebAppInterface(requireContext());
 
         // Configure WebView
         setupWebView(codeEditor, initialCode);
@@ -177,8 +165,18 @@ public class CodeEditorFragment extends Fragment {
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                //super.onConsoleMessage(consoleMessage);
+                // Log.d("WebViewConsole", consoleMessage.message() + " -- From line " +
+                // consoleMessage.lineNumber() + " of " + consoleMessage.sourceId());
+                output.append("\n" + consoleMessage.message());
+                return true;
+            }
+
+            // For older Android versions, you might need to override this method as well
             public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-                Log.d("WebViewConsole", message);
+                // Log.d("WebViewConsole", message + " -- From line " + lineNumber + " of " + sourceID);
+                output.append("\n" + message);
             }
         });
 
@@ -345,10 +343,10 @@ public class CodeEditorFragment extends Fragment {
                     .replace("`", "\\`")
                     .replace("\\", "\\\\"); // Escape backslashes
                 
-                // Get the current exercise title
+                // Get the current Exercise title
                 final String exerciseTitle = exercise != null ? exercise.getTitle() : "Shared Code";
                 
-                // Get current user's friends
+                // Get current User's friends
                 String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("users")
                     .child(currentUserId)
@@ -392,8 +390,8 @@ public class CodeEditorFragment extends Fragment {
                                         String friendId = friendIds.get(finalIndex);
                                         String conversationId = getConversationId(currentUserId, friendId);
                                         
-                                        // Create message with type "code" to indicate it's a code message
-                                        Message codeMessage = new Message(exerciseTitle, 
+                                        // Create Message with type "code" to indicate it's a code message
+                                        Message codeMessage = new Message(exerciseTitle,
                                             currentUserId,
                                             exerciseTitle,
                                             codeText);

@@ -25,3 +25,4 @@ public class MyApplication extends Application {
         FirebaseDatabase.getInstance().setLogLevel(com.google.firebase.database.Logger.Level.DEBUG);
     }
 } 
+

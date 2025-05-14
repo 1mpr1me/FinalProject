@@ -12,11 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +23,7 @@ public class OfficialExercisesFragment extends Fragment {
     private static final String TAG = "OfficialExercises";
     private RecyclerView recyclerView;
     private ExerciseAdapter adapter;
-    private List<Exercise> exercises;
+    private List<ru.myitschool.finalproject.Exercise> exercises;
     private DatabaseReference officialExercisesRef;
 
     @Override
@@ -68,21 +65,21 @@ public class OfficialExercisesFragment extends Fragment {
         for (int i = 1; i <= 5; i++) {
             Exercise exercise = createEasyExercise(i);
             exercises.add(exercise);
-            Log.d(TAG, "Created easy exercise: " + exercise.getTitle());
+            Log.d(TAG, "Created easy Exercise: " + exercise.getTitle());
         }
         
         // Create Medium exercises (1-2)
         for (int i = 1; i <= 2; i++) {
             Exercise exercise = createMediumExercise(i);
             exercises.add(exercise);
-            Log.d(TAG, "Created medium exercise: " + exercise.getTitle());
+            Log.d(TAG, "Created medium Exercise: " + exercise.getTitle());
         }
         
         // Create Hard exercises (1-2)
         for (int i = 1; i <= 2; i++) {
             Exercise exercise = createHardExercise(i);
             exercises.add(exercise);
-            Log.d(TAG, "Created hard exercise: " + exercise.getTitle());
+            Log.d(TAG, "Created hard Exercise: " + exercise.getTitle());
         }
         
         Log.d(TAG, "Total exercises created: " + exercises.size());
@@ -119,9 +116,9 @@ public class OfficialExercisesFragment extends Fragment {
                     if (key != null) {
                         officialExercisesRef.child(key).setValue(exercise)
                             .addOnSuccessListener(aVoid -> 
-                                Log.d(TAG, "Saved exercise to Firebase: " + exercise.getTitle()))
+                                Log.d(TAG, "Saved Exercise to Firebase: " + exercise.getTitle()))
                             .addOnFailureListener(e -> 
-                                Log.e(TAG, "Failed to save exercise: " + exercise.getTitle()));
+                                Log.e(TAG, "Failed to save Exercise: " + exercise.getTitle()));
                     }
                 }
             } else {
@@ -131,14 +128,14 @@ public class OfficialExercisesFragment extends Fragment {
     }
 
     private void onExerciseClick(Exercise exercise) {
-        CodeEditorFragment codeEditorFragment = new CodeEditorFragment();
+        CodeEditorFragment fragment = new CodeEditorFragment();
         Bundle args = new Bundle();
-        args.putParcelable("exercise", exercise);
-        codeEditorFragment.setArguments(args);
+        args.putParcelable("Exercise", exercise);
+        fragment.setArguments(args);
         
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, codeEditorFragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -225,7 +222,7 @@ public class OfficialExercisesFragment extends Fragment {
                 
             default:
                 title = "Easy Exercise " + number;
-                description = "Complete this simple Python exercise.";
+                description = "Complete this simple Python Exercise.";
                 initialCode = "def solution():\n    # Your code here\n    pass";
                 solutionMethodName = "solution";
                 hints.add("Think about the basic Python concepts");
@@ -277,7 +274,7 @@ public class OfficialExercisesFragment extends Fragment {
                 
             default:
                 title = "Medium Exercise " + number;
-                description = "Complete this intermediate Python exercise.";
+                description = "Complete this intermediate Python Exercise.";
                 initialCode = "def solution():\n    # Your code here\n    pass";
                 solutionMethodName = "solution";
                 hints.add("Think about efficient algorithms");
@@ -329,7 +326,7 @@ public class OfficialExercisesFragment extends Fragment {
                 
             default:
                 title = "Hard Exercise " + number;
-                description = "Complete this advanced Python exercise.";
+                description = "Complete this advanced Python Exercise.";
                 initialCode = "def solution():\n    # Your code here\n    pass";
                 solutionMethodName = "solution";
                 hints.add("Consider time complexity");
@@ -342,3 +339,7 @@ public class OfficialExercisesFragment extends Fragment {
         return new Exercise(title, description, "Hard", "Official", initialCode, testCases, hints, solutionMethodName, 15);
     }
 } 
+
+
+
+

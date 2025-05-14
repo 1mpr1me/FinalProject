@@ -67,6 +67,18 @@
                         app:backgroundTint="@color/primary"
                         app:cornerRadius="8dp"
                         app:icon="@drawable/ic_settings"
+                        app:iconTint="@color/text_primary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/leaderboards_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Leaderboards"
+                        android:textColor="@color/text_primary"
+                        app:backgroundTint="@color/primary"
+                        app:cornerRadius="8dp"
+                        app:icon="@drawable/ic_medal_gold"
                         app:iconTint="@color/text_primary"/>
 
                 </LinearLayout>

@@ -43,3 +43,8 @@ public class ExerciseFragment extends Fragment {
         return view;
     }
 }
+
+
+
+
+

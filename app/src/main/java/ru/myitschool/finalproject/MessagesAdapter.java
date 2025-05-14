@@ -5,15 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -98,21 +98,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
             
-            // Make code message clickable
+            // Make code Message clickable
             codeHolder.messageContainer.setOnClickListener(v -> {
-                Bundle args = new Bundle();
-                args.putString("title", message.getExerciseId());
-                args.putString("code", message.getCode());
+                Bundle bundle = new Bundle();
+                bundle.putString("title", message.getExerciseId());
+                bundle.putString("code", message.getCode());
                 
                 CodeEditorFragment codeEditorFragment = new CodeEditorFragment();
-                codeEditorFragment.setArguments(args);
+                codeEditorFragment.setArguments(bundle);
                 
-                FragmentActivity activity = (FragmentActivity) v.getContext();
-                activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, codeEditorFragment)
-                    .addToBackStack(null)
-                    .commit();
+                Navigation.findNavController(v).navigate(R.id.codeEditorFragment);
             });
         }
     }
@@ -175,4 +170,4 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             messageContainer = itemView.findViewById(R.id.message_container);
         }
     }
-} 
+}

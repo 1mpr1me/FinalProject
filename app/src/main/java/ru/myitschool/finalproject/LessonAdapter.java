@@ -71,4 +71,4 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
             topicsView = itemView.findViewById(R.id.lesson_item_topics);
         }
     }
-} 
+}

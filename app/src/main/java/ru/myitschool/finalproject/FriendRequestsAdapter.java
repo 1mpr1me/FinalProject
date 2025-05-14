@@ -13,19 +13,19 @@ import com.google.android.material.button.MaterialButton;
 import java.util.List;
 
 public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAdapter.RequestViewHolder> {
-    private List<MessagesFragment.FriendRequest> requests;
+    private List<FriendRequest> requests;
     private OnRequestAcceptedListener acceptListener;
     private OnRequestRejectedListener rejectListener;
 
     public interface OnRequestAcceptedListener {
-        void onRequestAccepted(MessagesFragment.FriendRequest request);
+        void onRequestAccepted(FriendRequest request);
     }
 
     public interface OnRequestRejectedListener {
-        void onRequestRejected(MessagesFragment.FriendRequest request);
+        void onRequestRejected(FriendRequest request);
     }
 
-    public FriendRequestsAdapter(List<MessagesFragment.FriendRequest> requests,
+    public FriendRequestsAdapter(List<FriendRequest> requests,
                                OnRequestAcceptedListener acceptListener,
                                OnRequestRejectedListener rejectListener) {
         this.requests = requests;
@@ -43,7 +43,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
 
     @Override
     public void onBindViewHolder(@NonNull RequestViewHolder holder, int position) {
-        MessagesFragment.FriendRequest request = requests.get(position);
+        FriendRequest request = requests.get(position);
         holder.nameText.setText(request.getName());
         
         holder.acceptButton.setOnClickListener(v -> {
@@ -77,3 +77,8 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
         }
     }
 } 
+
+
+
+
+

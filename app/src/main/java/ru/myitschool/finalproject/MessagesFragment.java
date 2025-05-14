@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -56,16 +55,16 @@ public class MessagesFragment extends Fragment {
 
         // Debug information
         if (currentUser != null) {
-            System.out.println("Current user ID: " + currentUser.getUid());
-            System.out.println("Current user display name: " + currentUser.getDisplayName());
-            System.out.println("Current user email: " + currentUser.getEmail());
+            System.out.println("Current User ID: " + currentUser.getUid());
+            System.out.println("Current User display name: " + currentUser.getDisplayName());
+            System.out.println("Current User email: " + currentUser.getEmail());
             
             // Check if display name is set
             if (currentUser.getDisplayName() == null || currentUser.getDisplayName().isEmpty()) {
-                System.out.println("WARNING: Display name is not set for current user");
+                System.out.println("WARNING: Display name is not set for current User");
             }
         } else {
-            System.out.println("ERROR: No user is currently logged in");
+            System.out.println("ERROR: No User is currently logged in");
         }
 
         // Initialize views
@@ -78,7 +77,7 @@ public class MessagesFragment extends Fragment {
         friendsList.setLayoutManager(new LinearLayoutManager(getContext()));
         requestsList.setLayoutManager(new LinearLayoutManager(getContext()));
         
-        friendsAdapter = new FriendsAdapter(friends, this::onFriendSelected);
+        friendsAdapter = new FriendsAdapter(friends, this::onFriendClick);
         requestsAdapter = new FriendRequestsAdapter(friendRequests, this::onRequestAccepted, this::onRequestRejected);
         
         friendsList.setAdapter(friendsAdapter);
@@ -131,8 +130,8 @@ public class MessagesFragment extends Fragment {
     }
 
     private void sendFriendRequest(String friendUsername) {
-        System.out.println("Searching for user with username: " + friendUsername);
-        // Find user by username
+        System.out.println("Searching for User with username: " + friendUsername);
+        // Find User by username
         databaseRef.child("users").orderByChild("username").equalTo(friendUsername)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -141,7 +140,7 @@ public class MessagesFragment extends Fragment {
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                 String friendId = userSnapshot.getKey();
-                                System.out.println("Found user with ID: " + friendId);
+                                System.out.println("Found User with ID: " + friendId);
                                 
                                 if (friendId != null && !friendId.equals(currentUser.getUid())) {
                                     // Check if already friends
@@ -167,7 +166,9 @@ public class MessagesFragment extends Fragment {
                                                                     }
                                                                     
                                                                     // Create friend request object
+                                                                    String requestId = databaseRef.child("users").child(friendId).child("friendRequests").push().getKey();
                                                                     FriendRequest request = new FriendRequest(
+                                                                            requestId,
                                                                             currentUser.getUid(),
                                                                             currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous"
                                                                     );
@@ -191,7 +192,7 @@ public class MessagesFragment extends Fragment {
                                                                     System.out.println("Error checking existing request: " + error.getMessage());
                                                                     Toast.makeText(getContext(), R.string.error_adding_friend, Toast.LENGTH_SHORT).show();
                                                                 }
-                                                            });
+                                                            }); // End of Listener 3 - Semicolon added here
                                                 }
 
                                                 @Override
@@ -210,7 +211,7 @@ public class MessagesFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        System.out.println("Database error while searching for user: " + databaseError.getMessage());
+                        System.out.println("Database error while searching for User: " + databaseError.getMessage());
                         Toast.makeText(getContext(), R.string.error_adding_friend, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -230,7 +231,7 @@ public class MessagesFragment extends Fragment {
                             friendRequests.clear();
                             for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                                 String senderId = requestSnapshot.getKey();
-                                MessagesFragment.FriendRequest request = requestSnapshot.getValue(MessagesFragment.FriendRequest.class);
+                                FriendRequest request = requestSnapshot.getValue(FriendRequest.class);
                                 if (request != null && senderId != null) {
                                     request.setId(senderId); // Ensure the ID is set correctly
                                     friendRequests.add(request);
@@ -249,66 +250,66 @@ public class MessagesFragment extends Fragment {
                             Toast.makeText(getContext(), R.string.error_loading_friends, Toast.LENGTH_SHORT).show();
                         }
                     });
-        } else {
-            System.out.println("Cannot load friend requests - currentUser is null");
         }
     }
 
     private void onRequestAccepted(FriendRequest request) {
-        if (currentUser == null) return;
+        String friendId = request.getSenderId();
+        String friendName = request.getSenderName();
         
-        String friendId = request.getId();
-        String friendName = request.getName();
-        
-        // Add to friends list for both users
+        // Add to friends list
+        Friend newFriend = new Friend(friendId, friendName);
         databaseRef.child("users").child(currentUser.getUid())
                 .child("friends").child(friendId)
-                .setValue(friendName)
+                .setValue(newFriend)
                 .addOnSuccessListener(aVoid -> {
+                    // Also add current user to friend's friends list
+                    Friend currentUserAsFriend = new Friend(currentUser.getUid(), currentUser.getDisplayName());
                     databaseRef.child("users").child(friendId)
                             .child("friends").child(currentUser.getUid())
-                            .setValue(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous")
-                            .addOnSuccessListener(aVoid1 -> {
-                                // Remove friend request
-                                databaseRef.child("users").child(currentUser.getUid())
-                                        .child("friendRequests").child(friendId)
-                                        .removeValue()
-                                        .addOnSuccessListener(aVoid2 -> {
-                                            Toast.makeText(getContext(), R.string.friend_added, Toast.LENGTH_SHORT).show();
-                                            // Reload friends list
-                                            loadFriends();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            System.out.println("Error removing friend request: " + e.getMessage());
-                                            Toast.makeText(getContext(), R.string.error_accepting_request, Toast.LENGTH_SHORT).show();
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                System.out.println("Error adding friend to other user: " + e.getMessage());
-                                Toast.makeText(getContext(), R.string.error_accepting_request, Toast.LENGTH_SHORT).show();
-                            });
+                            .setValue(currentUserAsFriend);
+                    
+                    // Delete the request
+                    databaseRef.child("users").child(currentUser.getUid())
+                            .child("friendRequests").child(request.getId())
+                            .removeValue();
+                    
+                    Toast.makeText(getContext(), "Friend request accepted", Toast.LENGTH_SHORT).show();
+                    
+                    // Update UI
+                    friends.add(newFriend);
+                    friendsAdapter.notifyDataSetChanged();
+                    friendRequests.remove(request);
+                    requestsAdapter.notifyDataSetChanged();
+                    
+                    // Hide container if no requests
+                    if (friendRequests.isEmpty()) {
+                        requestsContainer.setVisibility(View.GONE);
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    System.out.println("Error adding friend: " + e.getMessage());
-                    Toast.makeText(getContext(), R.string.error_accepting_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error accepting request", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    
     private void onRequestRejected(FriendRequest request) {
-        if (currentUser == null) return;
-        
-        String friendId = request.getId();
-        
-        // Remove friend request
+        // Delete the request
         databaseRef.child("users").child(currentUser.getUid())
-                .child("friendRequests").child(friendId)
+                .child("friendRequests").child(request.getId())
                 .removeValue()
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), R.string.request_rejected, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Friend request rejected", Toast.LENGTH_SHORT).show();
+                    // Remove from local list
+                    friendRequests.remove(request);
+                    requestsAdapter.notifyDataSetChanged();
+                    
+                    // Hide container if no requests
+                    if (friendRequests.isEmpty()) {
+                        requestsContainer.setVisibility(View.GONE);
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    System.out.println("Error rejecting friend request: " + e.getMessage());
-                    Toast.makeText(getContext(), R.string.error_rejecting_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error rejecting request", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -340,7 +341,7 @@ public class MessagesFragment extends Fragment {
         }
     }
 
-    private void onFriendSelected(Friend friend) {
+    private void onFriendClick(Friend friend) {
         if (friend.getId().equals("ai_assistant")) {
             // Open chat with AI Assistant
             ChatFragment chatFragment = ChatFragment.newInstance("ai_assistant", "AI Assistant");
@@ -370,36 +371,7 @@ public class MessagesFragment extends Fragment {
         }
     }
 
-    public static class Friend {
-        private String id;
-        private String name;
+    // Using imported Friend model class
 
-        public Friend(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getId() { return id; }
-        public String getName() { return name; }
-    }
-
-    public static class FriendRequest {
-        private String id;
-        private String name;
-
-        public FriendRequest() {
-            // Required for Firebase
-        }
-
-        public FriendRequest(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getId() { return id; }
-        public String getName() { return name; }
-        
-        public void setId(String id) { this.id = id; }
-        public void setName(String name) { this.name = name; }
-    }
-} 
+    // Using imported FriendRequest model class
+}

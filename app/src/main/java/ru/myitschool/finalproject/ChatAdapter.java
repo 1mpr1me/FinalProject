@@ -26,7 +26,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         holder.senderText.setText(message.getSender());
         holder.messageText.setText(message.getMessage());
 
-        // Align AI messages to the left, user messages to the right
+        // Align AI messages to the left, User messages to the right
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.messageText.getLayoutParams();
         if (message.isAI()) {
             params.leftMargin = 0;
@@ -61,3 +61,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 } 
+
+
+
+

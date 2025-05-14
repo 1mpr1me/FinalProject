@@ -18,7 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
 
@@ -168,7 +166,7 @@ public class CreatePostFragment extends Fragment {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
-            Toast.makeText(getContext(), "Please log in to create a post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please log in to create a ru.myitschool.finalproject.Post", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -292,14 +290,18 @@ public class CreatePostFragment extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("CreatePostFragment", "Error saving post: " + e.getMessage());
-                    Toast.makeText(getContext(), "Error creating post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("CreatePostFragment", "Error saving ru.myitschool.finalproject.Post: " + e.getMessage());
+                    Toast.makeText(getContext(), "Error creating ru.myitschool.finalproject.Post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     postButton.setEnabled(true);
                 });
         } catch (Exception e) {
             Log.e("CreatePostFragment", "Error in savePost: " + e.getMessage());
-            Toast.makeText(getContext(), "Error creating post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error creating ru.myitschool.finalproject.Post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             postButton.setEnabled(true);
         }
     }
 } 
+
+
+
+

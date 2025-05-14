@@ -24,7 +24,7 @@ public class Message {
     }
 
     public Message(String exerciseTitle, String senderId, String exerciseId, String code) {
-        this.text = exerciseTitle;  // Use exercise title as message text
+        this.text = exerciseTitle;  // Use Exercise title as Message text
         this.senderId = senderId;
         this.timestamp = System.currentTimeMillis();
         this.type = "code";
@@ -85,3 +85,7 @@ public class Message {
         this.code = code;
     }
 } 
+
+
+
+

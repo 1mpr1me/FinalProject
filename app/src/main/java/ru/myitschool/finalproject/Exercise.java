@@ -223,3 +223,8 @@ public class Exercise implements Parcelable {
                 '}';
     }
 }
+
+
+
+
+

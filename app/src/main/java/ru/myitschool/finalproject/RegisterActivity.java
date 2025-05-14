@@ -65,11 +65,11 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Create user with email and password
+        // Create ru.myitschool.finalproject.User with email and password
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Get the user ID
+                        // Get the ru.myitschool.finalproject.User ID
                         String userId = auth.getCurrentUser().getUid();
 
                         // Set display name
@@ -79,13 +79,13 @@ public class RegisterActivity extends AppCompatActivity {
                         auth.getCurrentUser().updateProfile(profileUpdates)
                                 .addOnCompleteListener(profileTask -> {
                                     if (profileTask.isSuccessful()) {
-                                        // Create user data
+                                        // Create ru.myitschool.finalproject.User data
                                         Map<String, Object> userData = new HashMap<>();
                                         userData.put("username", username);
                                         userData.put("email", email);
                                         userData.put("score", 0);
 
-                                        // Save user data to Firebase Database
+                                        // Save ru.myitschool.finalproject.User data to Firebase Database
                                         databaseRef.child("users").child(userId).setValue(userData)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                     finish();
                                                 })
                                                 .addOnFailureListener(e -> {
-                                                    Toast.makeText(RegisterActivity.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RegisterActivity.this, "Failed to save User data", Toast.LENGTH_SHORT).show();
                                                 });
                                     } else {
                                         Toast.makeText(RegisterActivity.this, "Failed to set display name", Toast.LENGTH_SHORT).show();
@@ -106,3 +106,5 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 }
+
+

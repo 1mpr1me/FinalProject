@@ -2,12 +2,12 @@ package ru.myitschool.finalproject;
 
 public class ChatMessage {
     private String sender;
-    private String message;
+    private String messageText;
     private boolean isAI;
 
-    public ChatMessage(String sender, String message, boolean isAI) {
+    public ChatMessage(String sender, String Message, boolean isAI) {
         this.sender = sender;
-        this.message = message;
+        this.messageText = Message;
         this.isAI = isAI;
     }
 
@@ -16,10 +16,14 @@ public class ChatMessage {
     }
 
     public String getMessage() {
-        return message;
+        return messageText;
     }
 
     public boolean isAI() {
         return isAI;
     }
 } 
+
+
+
+

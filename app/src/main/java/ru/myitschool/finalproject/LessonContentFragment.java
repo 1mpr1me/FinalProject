@@ -85,7 +85,7 @@ public class LessonContentFragment extends Fragment {
             }
         }
 
-        // Initialize Firebase and mark lesson as completed
+        // Initialize Firebase and mark ru.myitschool.finalproject.Lesson as completed
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();
@@ -103,8 +103,12 @@ public class LessonContentFragment extends Fragment {
                         // Successfully marked as completed
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Failed to mark lesson as completed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Failed to mark ru.myitschool.finalproject.Lesson as completed", Toast.LENGTH_SHORT).show();
                     });
         }
     }
 } 
+
+
+
+

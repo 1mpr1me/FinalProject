@@ -40,6 +40,18 @@ public class FriendRequest {
     public void setSenderName(String senderName) {
         this.senderName = senderName;
     }
+    
+    public String getName() {
+        return senderName;
+    }
+    
+    public void setId(String id) {
+        this.requestId = id;
+    }
+    
+    public String getId() {
+        return requestId;
+    }
 
     public long getTimestamp() {
         return timestamp;
@@ -49,3 +61,7 @@ public class FriendRequest {
         this.timestamp = timestamp;
     }
 } 
+
+
+
+

@@ -63,7 +63,7 @@ public class CreateExerciseFragment extends Fragment {
         hintsInput = view.findViewById(R.id.hints_input);
         createButton = view.findViewById(R.id.create_button);
         
-        // Initialize WebAppInterface
+        // Initialize ru.myitschool.finalproject.WebAppInterface
         initialCodeInterface = new WebAppInterface(requireContext());
         
         // Set up code editor
@@ -162,7 +162,7 @@ public class CreateExerciseFragment extends Fragment {
             testCases.add(new Exercise.TestCase(inputs, expectedOutput));
         }
         
-        // Create exercise object
+        // Create Exercise object
         Exercise exercise = new Exercise(
             title,
             description,
@@ -181,17 +181,17 @@ public class CreateExerciseFragment extends Fragment {
             // Update score first
             userScoreRef.setValue(currentScore - EXERCISE_COST)
                 .addOnSuccessListener(aVoid -> {
-                    // Then create the exercise
+                    // Then create the Exercise
                     communityExercisesRef.child(exerciseId).setValue(exercise)
                         .addOnSuccessListener(aVoid2 -> {
-                            Toast.makeText(getContext(), "Exercise created successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "ru.myitschool.finalproject.Exercise created successfully!", Toast.LENGTH_SHORT).show();
                             if (getParentFragmentManager().getBackStackEntryCount() > 0) {
                                 getParentFragmentManager().popBackStack();
                             }
                         })
                         .addOnFailureListener(e -> {
-                            Log.e(TAG, "Failed to create exercise: " + e.getMessage());
-                            Toast.makeText(getContext(), "Failed to create exercise: " + e.getMessage(), 
+                            Log.e(TAG, "Failed to create ru.myitschool.finalproject.Exercise: " + e.getMessage());
+                            Toast.makeText(getContext(), "Failed to create ru.myitschool.finalproject.Exercise: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                         });
                 })
@@ -235,3 +235,7 @@ public class CreateExerciseFragment extends Fragment {
         }
     }
 } 
+
+
+
+

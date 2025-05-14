@@ -1,6 +1,7 @@
 package ru.myitschool.finalproject;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,19 +130,19 @@ public class ChatFragment extends Fragment {
         if (messageInput.getText() == null) return;
 
         String messageText = messageInput.getText().toString().trim();
-        if (!messageText.isEmpty()) {
+        if (!TextUtils.isEmpty(messageText)) {
             if (friendId.equals("ai_assistant")) {
                 // Handle AI messages
                 String conversationId = getConversationId(currentUser.getUid(), "ai_assistant");
                 
-                // Save user message to Firebase
+                // Save Message to Firebase
                 Message userMessage = new Message(messageText, currentUser.getUid());
                 databaseRef.child("conversations").child(conversationId).child("messages")
                     .push().setValue(userMessage);
                 
                 messageInput.setText("");
 
-                // Get code from message if it's a code message
+                // Get code from Message if it's a code Message
                 String codeToAnalyze = "";
                 if (messages.size() > 1) {
                     Message lastMessage = messages.get(messages.size() - 2);
@@ -171,12 +172,12 @@ public class ChatFragment extends Fragment {
                     });
                 });
             } else {
-                // Regular chat message
+                // Regular chat Message
                 String conversationId = getConversationId(currentUser.getUid(), friendId);
-                Message message = new Message(messageText, currentUser.getUid());
+                Message newMessage = new Message(messageText, currentUser.getUid());
                 
                 databaseRef.child("conversations").child(conversationId).child("messages")
-                    .push().setValue(message)
+                    .push().setValue(newMessage)
                     .addOnSuccessListener(aVoid -> {
                         messageInput.setText("");
                         messagesList.scrollToPosition(messages.size() - 1);
@@ -191,4 +192,4 @@ public class ChatFragment extends Fragment {
     private String getConversationId(String uid1, String uid2) {
         return uid1.compareTo(uid2) < 0 ? uid1 + "_" + uid2 : uid2 + "_" + uid1;
     }
-} 
+}

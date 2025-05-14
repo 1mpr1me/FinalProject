@@ -14,7 +14,7 @@ public class WebAppInterface {
         void onCodeReceived(String code);
     }
 
-    WebAppInterface(Context c) {
+    public WebAppInterface(Context c) {
         mContext = c;
     }
 
@@ -34,14 +34,14 @@ public class WebAppInterface {
                     listener.onCodeReceived(this.userCode);
                 }
             } else {
-                Log.e("WebAppInterface", "Received null or empty code");
+                Log.d("WebAppInterface", "Received null or empty code");
                 this.userCode = "";
                 if (mContext != null) {
                     Toast.makeText(mContext, "No code content received", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {
-            Log.e("WebAppInterface", "Error processing code: " + e.getMessage());
+            Log.d("WebAppInterface", "Error processing code: " + e.getMessage());
             if (mContext != null) {
                 Toast.makeText(mContext, "Error processing code", Toast.LENGTH_SHORT).show();
             }
@@ -49,7 +49,12 @@ public class WebAppInterface {
     }
 
     public String getUserCode() {
-        Log.d("WebAppInterface", "Getting user code, length: " + userCode.length());
+        Log.d("WebAppInterface", "Getting  code, length: " + userCode.length());
         return userCode;
     }
 }
+
+
+
+
+

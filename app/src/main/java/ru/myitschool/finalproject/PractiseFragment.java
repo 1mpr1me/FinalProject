@@ -54,10 +54,10 @@ public class PractiseFragment extends Fragment {
 
         // Set up FAB click listener
         createExerciseFab.setOnClickListener(v -> {
-            CreateExerciseFragment createExerciseFragment = new CreateExerciseFragment();
+            CreateExerciseFragment fragment = new CreateExerciseFragment();
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, createExerciseFragment)
+                    .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
         });
@@ -65,4 +65,9 @@ public class PractiseFragment extends Fragment {
         return view;
     }
 }
+
+
+
+
+
 

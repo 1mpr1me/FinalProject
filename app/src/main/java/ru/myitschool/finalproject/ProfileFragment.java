@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
         emailText = view.findViewById(R.id.email_text);
         scoreText = view.findViewById(R.id.score_text);
         MaterialButton settingsButton = view.findViewById(R.id.settings_button);
+        MaterialButton leaderboardsButton = view.findViewById(R.id.leaderboards_button);
 
         // Set up settings button click listener
         settingsButton.setOnClickListener(v -> {
@@ -51,6 +52,16 @@ public class ProfileFragment extends Fragment {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, settingsFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+        
+        // Set up leaderboards button click listener
+        leaderboardsButton.setOnClickListener(v -> {
+            LeaderboardFragment leaderboardFragment = new LeaderboardFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, leaderboardFragment)
                     .addToBackStack(null)
                     .commit();
         });

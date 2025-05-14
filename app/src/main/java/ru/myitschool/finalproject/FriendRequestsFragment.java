@@ -28,7 +28,7 @@ public class FriendRequestsFragment extends Fragment {
     private RecyclerView requestsList;
     private TextView emptyText;
     private FriendRequestsAdapter adapter;
-    private List<MessagesFragment.FriendRequest> friendRequests;
+    private List<FriendRequest> friendRequests;
     private DatabaseReference databaseRef;
     private FirebaseUser currentUser;
 
@@ -66,7 +66,7 @@ public class FriendRequestsFragment extends Fragment {
                             friendRequests.clear();
                             for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                                 String senderId = requestSnapshot.getKey();
-                                MessagesFragment.FriendRequest request = requestSnapshot.getValue(MessagesFragment.FriendRequest.class);
+                                FriendRequest request = requestSnapshot.getValue(FriendRequest.class);
                                 if (request != null && senderId != null) {
                                     request.setId(senderId); // Ensure the ID is set correctly
                                     friendRequests.add(request);
@@ -86,7 +86,7 @@ public class FriendRequestsFragment extends Fragment {
         }
     }
 
-    private void onRequestAccepted(MessagesFragment.FriendRequest request) {
+    private void onRequestAccepted(FriendRequest request) {
         if (currentUser == null) return;
         
         String friendId = request.getId();
@@ -99,12 +99,12 @@ public class FriendRequestsFragment extends Fragment {
                 .child("friends").child(friendId)
                 .setValue(friendName)
                 .addOnSuccessListener(aVoid -> {
-                    System.out.println("Added friend to current user's list");
+                    System.out.println("Added friend to current ru.myitschool.finalproject.User's list");
                     databaseRef.child("users").child(friendId)
                             .child("friends").child(currentUser.getUid())
                             .setValue(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous")
                             .addOnSuccessListener(aVoid1 -> {
-                                System.out.println("Added current user to friend's list");
+                                System.out.println("Added current ru.myitschool.finalproject.User to friend's list");
                                 // Remove friend request
                                 databaseRef.child("users").child(currentUser.getUid())
                                         .child("friendRequests").child(friendId)
@@ -119,7 +119,7 @@ public class FriendRequestsFragment extends Fragment {
                                         });
                             })
                             .addOnFailureListener(e -> {
-                                System.out.println("Error adding friend to other user: " + e.getMessage());
+                                System.out.println("Error adding friend to other ru.myitschool.finalproject.User: " + e.getMessage());
                                 Toast.makeText(getContext(), R.string.error_accepting_request, Toast.LENGTH_SHORT).show();
                             });
                 })
@@ -129,7 +129,7 @@ public class FriendRequestsFragment extends Fragment {
                 });
     }
 
-    private void onRequestRejected(MessagesFragment.FriendRequest request) {
+    private void onRequestRejected(FriendRequest request) {
         if (currentUser == null) return;
         
         String friendId = request.getId();
@@ -159,3 +159,7 @@ public class FriendRequestsFragment extends Fragment {
         }
     }
 } 
+
+
+
+
