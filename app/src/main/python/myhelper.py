@@ -40,9 +40,24 @@ def run_method(code, method_name, inputs):
         # Execute the code in the namespace
         exec(code, namespace)
         
+        # Debug: Print all available functions in namespace
+        available_functions = [name for name, obj in namespace.items() if callable(obj)]
+        debug_info = f"Available functions: {available_functions}\nLooking for: {method_name}"
+        print(debug_info)  # This will show in the Android logs
+        
         # Get the method from namespace
         if method_name not in namespace:
-            return f"Error: Method '{method_name}' not found"
+            # Check if this is a case sensitivity issue
+            method_found = False
+            for name in namespace:
+                if name.lower() == method_name.lower() and callable(namespace[name]):
+                    print(f"Found function with different case: {name} instead of {method_name}")
+                    method_name = name  # Use the actual name with correct case
+                    method_found = True
+                    break
+            
+            if not method_found:
+                return f"Error: Function '{method_name}' not found. Please check your function name and make sure it matches exactly.\n\nAvailable functions: {available_functions}"
         
         method = namespace[method_name]
         

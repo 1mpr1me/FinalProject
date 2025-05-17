@@ -89,7 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         databaseRef.child("users").child(userId).setValue(userData)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                    // Redirect to profile setup instead of main activity
+                                                    Intent intent = new Intent(RegisterActivity.this, SetupProfileActivity.class);
                                                     startActivity(intent);
                                                     finish();
                                                 })

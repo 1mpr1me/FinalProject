@@ -1,7 +1,10 @@
 package ru.myitschool.finalproject;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -20,14 +24,25 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsFragment extends Fragment {
 
+    private static final int PICK_IMAGE_REQUEST = 1;
+    
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference userRef;
+    
+    private CircleImageView profileImageView;
+    private Uri imageUri;
 
     @Nullable
     @Override
@@ -45,6 +60,8 @@ public class SettingsFragment extends Fragment {
         }
 
         // Initialize views
+        profileImageView = view.findViewById(R.id.profile_image);
+        MaterialButton changeProfileImageButton = view.findViewById(R.id.change_profile_image_button);
         MaterialButton changeUsernameButton = view.findViewById(R.id.change_username_button);
         MaterialButton changePasswordButton = view.findViewById(R.id.change_password_button);
         MaterialButton changeEmailButton = view.findViewById(R.id.change_email_button);
@@ -54,8 +71,12 @@ public class SettingsFragment extends Fragment {
         MaterialButton logoutButton = view.findViewById(R.id.logout_button);
         SwitchMaterial darkModeSwitch = view.findViewById(R.id.dark_mode_switch);
         SwitchMaterial notificationsSwitch = view.findViewById(R.id.notifications_switch);
+        
+        // Load current profile image
+        loadProfileImage();
 
         // Set click listeners
+        changeProfileImageButton.setOnClickListener(v -> openImagePicker());
         changeUsernameButton.setOnClickListener(v -> showChangeUsernameDialog());
         changePasswordButton.setOnClickListener(v -> showChangePasswordDialog());
         changeEmailButton.setOnClickListener(v -> showChangeEmailDialog());
@@ -237,13 +258,86 @@ public class SettingsFragment extends Fragment {
         Toast.makeText(getContext(), "Privacy policy feature coming soon!", Toast.LENGTH_SHORT).show();
     }
 
+    private void loadProfileImage() {
+        if (currentUser != null) {
+            userRef.child("photoUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String photoUrl = dataSnapshot.getValue(String.class);
+                    if (photoUrl != null && !photoUrl.isEmpty()) {
+                        Glide.with(requireContext())
+                                .load(photoUrl)
+                                .placeholder(R.drawable.default_profile)
+                                .error(R.drawable.default_profile)
+                                .into(profileImageView);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getContext(), "Failed to load profile image", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            profileImageView.setImageURI(imageUri);
+            uploadProfileImage();
+        }
+    }
+
+    private void uploadProfileImage() {
+        if (imageUri != null) {
+            // Show loading indicator or disable UI
+            ImgBBService imgBBService = new ImgBBService(requireContext());
+            imgBBService.uploadImage(imageUri, new ImgBBService.OnImageUploadListener() {
+                @Override
+                public void onSuccess(String imageUrl) {
+                    // Update Firebase Auth profile
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setPhotoUri(Uri.parse(imageUrl))
+                            .build();
+                            
+                    currentUser.updateProfile(profileUpdates)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Update user data in Firebase Database
+                                    userRef.child("photoUrl").setValue(imageUrl)
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(getContext(), "Profile image updated successfully", Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(getContext(), "Failed to update profile image in database", Toast.LENGTH_SHORT).show();
+                                            });
+                                } else {
+                                    Toast.makeText(getContext(), "Failed to update profile image", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(getContext(), "Failed to upload image: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     private void logoutUser() {
         mAuth.signOut();
-        startActivity(new Intent(getActivity(), LoginActivity.class));
-        requireActivity().finish();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
-
-
-
-

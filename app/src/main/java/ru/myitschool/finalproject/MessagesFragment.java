@@ -77,7 +77,7 @@ public class MessagesFragment extends Fragment {
         friendsList.setLayoutManager(new LinearLayoutManager(getContext()));
         requestsList.setLayoutManager(new LinearLayoutManager(getContext()));
         
-        friendsAdapter = new FriendsAdapter(friends, this::onFriendClick);
+        friendsAdapter = new FriendsAdapter(friends, this::onFriendClick, this::onProfileClick);
         requestsAdapter = new FriendRequestsAdapter(friendRequests, this::onRequestAccepted, this::onRequestRejected);
         
         friendsList.setAdapter(friendsAdapter);
@@ -369,6 +369,30 @@ public class MessagesFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
         }
+    }
+
+    /**
+     * Handle click on a friend's profile image to view their profile
+     */
+    private void onProfileClick(Friend friend) {
+        // Don't open profile for AI Assistant
+        if (friend.getId().equals("ai_assistant")) {
+            Toast.makeText(getContext(), "AI Assistant doesn't have a profile", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Open the other user's profile
+        OtherProfileFragment fragment = OtherProfileFragment.newInstance(friend.getId());
+        getParentFragmentManager().beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+                R.anim.slide_in_left,
+                R.anim.slide_out_right
+            )
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit();
     }
 
     // Using imported Friend model class

@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -55,6 +57,8 @@ public class CodeEditorFragment extends Fragment {
     private String exerciseId;
     private String currentCode;
     private View rootView;
+    private float x1, x2; // Touch coordinates
+    private static final int MIN_DISTANCE = 150; // Minimum distance for swipe
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +97,9 @@ public class CodeEditorFragment extends Fragment {
         runCodeButton = rootView.findViewById(R.id.run_button);
         output = rootView.findViewById(R.id.output);
         ImageButton shareButton = rootView.findViewById(R.id.share_code_button);
+        
+        // Initialize WebAppInterface
+        webAppInterface = new WebAppInterface(requireContext());
 
         // Set up toolbar
         MaterialToolbar toolbar = rootView.findViewById(R.id.toolbar);
@@ -107,7 +114,12 @@ public class CodeEditorFragment extends Fragment {
         // Get Exercise data from arguments
         Bundle args = getArguments();
         if (args != null) {
-            exercise = args.getParcelable("exercise"); // Corrected parameter name
+            // Check for both "exercise" and "Exercise" keys to ensure backward compatibility
+            exercise = args.getParcelable("exercise");
+            if (exercise == null) {
+                exercise = args.getParcelable("Exercise");
+            }
+            
             if (exercise != null) {
                 exerciseTitle = exercise.getTitle();
                 initialCode = exercise.getCode();
@@ -124,6 +136,9 @@ public class CodeEditorFragment extends Fragment {
 
         // Configure WebView
         setupWebView(codeEditor, initialCode);
+        
+        // Setup gesture detection for swipe
+        setupSwipeGesture();
 
         // Initialize Python
         if (!Python.isStarted()) {
@@ -184,8 +199,49 @@ public class CodeEditorFragment extends Fragment {
         webView.loadUrl("file:///android_asset/codemirror.html");
     }
 
+    private void setupSwipeGesture() {
+        rootView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x1 = event.getX();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    x2 = event.getX();
+                    float deltaX = x2 - x1;
+                    
+                    // Detect left swipe (deltaX negative)
+                    if (Math.abs(deltaX) > MIN_DISTANCE && deltaX < 0) {
+                        // Left swipe detected, show exercise description
+                        showExerciseDescription();
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        });
+    }
+    
+    private void showExerciseDescription() {
+        if (exercise != null && exercise.getDescription() != null) {
+            new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(exercise.getTitle())
+                .setMessage(exercise.getDescription())
+                .setPositiveButton("OK", null)
+                .show();
+        } else {
+            Toast.makeText(getContext(), "No exercise description available", Toast.LENGTH_SHORT).show();
+        }
+    }
+    
     private void runCode() {
         Log.d("CodeEditor", "Starting code execution...");
+        
+        // Check if exercise is null before proceeding
+        if (exercise == null) {
+            output.setText("Error: Exercise data is missing. Please try again.");
+            output.setVisibility(View.VISIBLE);
+            return;
+        }
         codeEditor.evaluateJavascript("javascript:sendCode()", value -> {
             Log.d("CodeEditor", "JavaScript returned value: " + value);
             try {
@@ -198,6 +254,9 @@ public class CodeEditorFragment extends Fragment {
                     List<Exercise.TestCase> testCases = exercise.getTestCases();
                     String methodName = exercise.getSolutionMethodName();
                     
+                    // Log the method name for debugging
+                    Log.d("CodeEditor", "Looking for method: " + methodName);
+                    
                     if (testCases != null && !testCases.isEmpty()) {
                         // Run all test cases
                         StringBuilder outputBuilder = new StringBuilder();
@@ -208,6 +267,8 @@ public class CodeEditorFragment extends Fragment {
                         
                         for (int i = 0; i < testCases.size(); i++) {
                             Exercise.TestCase testCase = testCases.get(i);
+                            // Log the code being executed for debugging
+                            Log.d("CodeEditor", "Executing code:\n" + code);
                             String result = executePythonMethod(code, methodName, testCase.getInputs());
                             boolean passed = result.trim().equals(testCase.getExpectedOutput().trim());
                             
