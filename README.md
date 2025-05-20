@@ -1,9 +1,7 @@
-Samsung Final project "FitTrack"
+Code Share is an interactive learning app designed to help users master algorithms and data structures through structured lessons and hands-on practice. The app provides:
+✅ Well-organized lessons covering key concepts in Data Structures and Algorithms (DSA)
+✅ A "Practice" mode with LeetCode exercises, categorized by difficulty (Easy, Medium, Hard)
+                 ✅ A seamless learning experience, where each lesson includes a direct link to related coding problems
+✅ Custom animations and intuitive UI, making learning more engaging
 
-This app is designed to help users achieve their fitness goals by creating personalized workout programs. Users input their height, weight, and current
-fitness level (e.g., number of pushups they can do), and the app generates a workout plan for a specified number of days. It sends daily reminders to keep
-users on track and allows them to set specific goals, such as increasing the number of pushups from 10 to 20. The app then adjusts the program to gradually
-improve their performance, ensuring steady progress without overwhelming them. Users can track their improvements and see how they’re advancing toward their
-goals. At the end of the process, the app uses AI to analyze their progress and offer smart suggestions for further improvement, optimizing their workout
-routine and helping them achieve even greater results.
-
+By combining theory and practice, DSA Learn helps students, programmers, and coding enthusiasts sharpen their problem-solving skills and prepare for technical interviews. 🚀
