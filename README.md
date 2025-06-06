@@ -1,7 +1,21 @@
-Code Share is an interactive learning app designed to help users master algorithms and data structures through structured lessons and hands-on practice. The app provides:
-✅ Well-organized lessons covering key concepts in Data Structures and Algorithms (DSA)
-✅ A "Practice" mode with LeetCode exercises, categorized by difficulty (Easy, Medium, Hard)
-                 ✅ A seamless learning experience, where each lesson includes a direct link to related coding problems
-✅ Custom animations and intuitive UI, making learning more engaging
+# FinalProject: Code Sharing & Learning Platform
 
-By combining theory and practice, DSA Learn helps students, programmers, and coding enthusiasts sharpen their problem-solving skills and prepare for technical interviews. 🚀
+FinalProject is an Android application designed as a social learning platform centered around programming. It allows users to share posts that can include text, images, and code snippets, with robust code display and syntax highlighting. The platform also integrates educational components like lessons and exercises, alongside community features such as a friend system and messaging.
+
+## Key Features:
+
+*   **Social Posting:** Share posts with text, images, and code.
+*   **Code Display:** View code snippets with syntax highlighting in posts and a dedicated dialog.
+*   **Learning Modules:** Access lessons and practice exercises.
+*   **Community Interaction:** Connect with friends and exchange messages.
+*   **AI Assistance:** Integrated AI to help with coding and learning.
+*   **User Authentication:** Secure login, registration, and profile management.
+
+## Core Technologies:
+
+*   Android (Java)
+*   Firebase (Authentication, Realtime Database, Storage)
+*   Glide (Image Loading)
+*   highlight.js (Syntax Highlighting)
+*   Chaquopy (Python Integration)
+*   Gemini AI API
