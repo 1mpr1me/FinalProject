@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/communityFragment"
-        android:name="ru.myitschool.finalproject.CommunityFragment"
+        android:name="com.code_share.finalapp.CommunityFragment"
         android:label="Community"
         tools:layout="@layout/fragment_community">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/createPostFragment"
-        android:name="ru.myitschool.finalproject.CreatePostFragment"
+        android:name="com.code_share.finalapp.CreatePostFragment"
         android:label="Create Post"
         tools:layout="@layout/fragment_create_post">
         <action
@@ -27,13 +27,13 @@
 
     <fragment
         android:id="@+id/postCodeEditorFragment"
-        android:name="ru.myitschool.finalproject.PostCodeEditorFragment"
+        android:name="com.code_share.finalapp.PostCodeEditorFragment"
         android:label="Code Editor"
         tools:layout="@layout/fragment_post_code_editor" />
 
     <fragment
         android:id="@+id/codeEditorFragment"
-        android:name="ru.myitschool.finalproject.CodeEditorFragment"
+        android:name="com.code_share.finalapp.CodeEditorFragment"
         android:label="Code Editor"
         tools:layout="@layout/fragment_code_editor" />
 

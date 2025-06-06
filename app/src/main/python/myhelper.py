@@ -1,4 +1,6 @@
 import sys
+import importlib.util
+import types
 from io import StringIO
 
 def main(code):
@@ -33,24 +35,48 @@ def run_with_input(code, input_data):
         sys.stdin = old_stdin
         return str(e)
 
-def run_method(code, method_name, inputs):
-    # Create namespace for execution
-    namespace = {}
+# Create a dynamic module for code execution
+def create_module_from_code(code):
+    # Create a new module
+    module_name = "user_solution"
+    spec = importlib.util.spec_from_loader(module_name, loader=None)
+    user_module = importlib.util.module_from_spec(spec)
+    
+    # Add the module to sys.modules
+    sys.modules[module_name] = user_module
+    
     try:
-        # Execute the code in the namespace
-        exec(code, namespace)
+        # Execute the code in the module's namespace
+        exec(code, user_module.__dict__)
+        return user_module
+    except Exception as e:
+        return str(e)
+
+# Alias function for compatibility with PythonExecutor
+def execute_method(code, method_name, inputs):
+    return run_method(code, method_name, inputs)
+
+def run_method(code, method_name, inputs):
+    try:
+        # Create a module from the user's code
+        module = create_module_from_code(code)
         
-        # Debug: Print all available functions in namespace
-        available_functions = [name for name, obj in namespace.items() if callable(obj)]
+        # Check if module creation failed
+        if isinstance(module, str):
+            return f"Error in code: {module}"
+        
+        # Debug: Print all available functions in module
+        available_functions = [name for name, obj in module.__dict__.items() 
+                              if callable(obj) and not name.startswith('__')]
         debug_info = f"Available functions: {available_functions}\nLooking for: {method_name}"
         print(debug_info)  # This will show in the Android logs
         
-        # Get the method from namespace
-        if method_name not in namespace:
+        # Get the method from module
+        if method_name not in module.__dict__:
             # Check if this is a case sensitivity issue
             method_found = False
-            for name in namespace:
-                if name.lower() == method_name.lower() and callable(namespace[name]):
+            for name in module.__dict__:
+                if name.lower() == method_name.lower() and callable(module.__dict__[name]):
                     print(f"Found function with different case: {name} instead of {method_name}")
                     method_name = name  # Use the actual name with correct case
                     method_found = True
@@ -59,7 +85,7 @@ def run_method(code, method_name, inputs):
             if not method_found:
                 return f"Error: Function '{method_name}' not found. Please check your function name and make sure it matches exactly.\n\nAvailable functions: {available_functions}"
         
-        method = namespace[method_name]
+        method = module.__dict__[method_name]
         
         # Convert Java ArrayList to Python list and process inputs
         processed_inputs = []
@@ -87,7 +113,7 @@ def run_method(code, method_name, inputs):
             except:
                 # If all else fails, keep as string
                 processed_inputs.append(str(input_str))
-            
+        
         # Call the method with the inputs
         result = method(*processed_inputs)
         return str(result)

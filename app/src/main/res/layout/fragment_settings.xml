@@ -210,6 +210,19 @@
                         app:backgroundTint="@color/primary"
                         app:cornerRadius="8dp"
                         android:layout_marginBottom="8dp"/>
+                        
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/admin_settings_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Admin Settings"
+                        android:textColor="@color/text_primary"
+                        app:backgroundTint="#1E88E5"
+                        app:cornerRadius="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone"
+                        app:icon="@drawable/ic_admin_star"
+                        app:iconTint="@color/text_primary"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/logout_button"

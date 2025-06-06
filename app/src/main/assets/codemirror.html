@@ -47,16 +47,55 @@
             
             // Set initial content
             editor.setValue("# Write your Python code here\n");
+            
+            // Add change event handler to automatically send code to Android
+            editor.on('change', function() {
+                // Use a debounce to avoid sending too many updates
+                clearTimeout(editor.changeTimer);
+                editor.changeTimer = setTimeout(function() {
+                    sendCode();
+                }, 500); // Send code after 500ms of inactivity
+            });
         }
 
         function sendCode() {
             try {
+                if (!editor) {
+                    console.error("Editor not initialized");
+                    return "# Error: Editor not initialized";
+                }
+                
                 const code = editor.getValue();
-                Android.sendCodeToAndroid(code);
+                
+                // Log the code being sent
+                console.log("Sending code to Android, length: " + code.length);
+                
+                // Make sure Android interface exists
+                if (typeof Android !== 'undefined' && Android && typeof Android.sendCodeToAndroid === 'function') {
+                    Android.sendCodeToAndroid(code);
+                    console.log("Code sent successfully");
+                } else {
+                    console.error("Android interface not available");
+                }
+                
                 return code;
             } catch (error) {
                 console.error("Error sending code:", error);
-                return "# Error: Could not get code from editor";
+                return "# Error: " + error.message;
+            }
+        }
+        
+        // Function to get code - called by JavaScript from Android
+        function getCode() {
+            try {
+                if (!editor) {
+                    console.error("Editor not initialized");
+                    return "";
+                }
+                return editor.getValue();
+            } catch (error) {
+                console.error("Error getting code:", error);
+                return "";
             }
         }
     </script>

@@ -8,11 +8,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    namespace 'ru.myitschool.finalproject'
+    namespace 'com.code_share.finalapp'
     compileSdk 34
 
     defaultConfig {
-        applicationId "ru.myitschool.finalproject"
+        applicationId "com.code_share.finalapp"
         minSdk 24
         targetSdk 34
         versionCode 1

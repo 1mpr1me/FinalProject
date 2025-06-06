@@ -66,6 +66,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"/>
+            
+        <!-- Code View Indicator -->
+        <TextView
+            android:id="@+id/code_view_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="View Code"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:visibility="gone"/>
 
         <!-- Action Buttons -->
         <LinearLayout
