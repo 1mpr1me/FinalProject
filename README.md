@@ -1,6 +1,6 @@
-# FinalProject: Code Sharing & Learning Platform
+# Code Sharing & Learning Platform
 
-FinalProject is an Android application designed as a social learning platform centered around programming. It allows users to share posts that can include text, images, and code snippets, with robust code display and syntax highlighting. The platform also integrates educational components like lessons and exercises, alongside community features such as a friend system and messaging.
+ CodeShare is an Android application designed as a social learning platform centered around programming. It allows users to share posts that can include text, images, and code snippets, with robust code display and syntax highlighting. The platform also integrates educational components like lessons and exercises, alongside community features such as a friend system and messaging.
 
 ## Key Features:
 
